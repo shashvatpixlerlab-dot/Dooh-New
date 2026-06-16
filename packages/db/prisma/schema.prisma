@@ -1,0 +1,231 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum VenueStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum RevenueModel {
+  percentage
+  flat
+}
+
+enum DeviceStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum DeviceApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum DeviceOrientation {
+  landscape
+  portrait
+}
+
+enum BookingStatus {
+  DRAFT
+  HELD
+  AWAITING_PAYMENT
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  CANCELLED
+  EXPIRED
+  COMPLETED
+  REFUNDED
+}
+
+enum ModerationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PaymentStatus {
+  CREATED
+  CAPTURED
+  FAILED
+  REFUNDED
+}
+
+enum UserRole {
+  ADMIN
+  SCREEN_OWNER
+  ADVERTISER
+}
+
+model User {
+  id                String      @id @default(uuid()) @db.Uuid
+  email             String      @unique
+  passwordHash      String      @map("password_hash")
+  name              String
+  phone             String
+  role              UserRole
+  createdAt         DateTime    @default(now()) @map("created_at")
+  ownedVenues       Venue[]     @relation("VenueOwner")
+  advertiserProfile Advertiser?
+
+  @@map("users")
+}
+
+model Venue {
+  id               String       @id @default(uuid()) @db.Uuid
+  name             String
+  contactEmail     String       @map("contact_email")
+  contactPhone     String       @map("contact_phone")
+  revenueModel     RevenueModel @map("revenue_model")
+  revenueValue     Decimal      @map("revenue_value") @db.Decimal(10, 4)
+  defaultImageUrl  String       @map("default_image_url")
+  status           VenueStatus  @default(ACTIVE)
+  ownerId          String?      @map("owner_id") @db.Uuid
+  createdAt        DateTime     @default(now()) @map("created_at")
+  owner            User?        @relation("VenueOwner", fields: [ownerId], references: [id])
+  devices          Device[]
+
+  @@index([ownerId])
+  @@map("venues")
+}
+
+model Device {
+  id                    String            @id @default(uuid()) @db.Uuid
+  venueId               String            @map("venue_id") @db.Uuid
+  name                  String
+  locationLabel         String            @map("location_label")
+  resolution            String
+  orientation           DeviceOrientation @default(landscape)
+  defaultImageUrl       String            @map("default_image_url")
+  slotDayPrice          Decimal           @map("slot_day_price") @db.Decimal(10, 2)
+  status                DeviceStatus           @default(ACTIVE)
+  approvalStatus        DeviceApprovalStatus   @default(APPROVED) @map("approval_status")
+  rejectionReason       String?                @map("rejection_reason")
+  credentialHash        String            @map("credential_hash")
+  deviceTokenHash       String?           @map("device_token_hash")
+  lastSeenAt            DateTime?         @map("last_seen_at")
+  currentlyShowingSlot  Int?              @map("currently_showing_slot")
+  createdAt             DateTime          @default(now()) @map("created_at")
+  venue                 Venue             @relation(fields: [venueId], references: [id])
+  bookings              Booking[]
+  slotOccupancies       SlotOccupancy[]
+  images                DeviceImage[]
+
+  @@index([venueId])
+  @@index([lastSeenAt])
+  @@map("devices")
+}
+
+model DeviceImage {
+  id        String @id @default(uuid()) @db.Uuid
+  deviceId  String @map("device_id") @db.Uuid
+  imageUrl  String @map("image_url")
+  sortOrder Int    @default(0) @map("sort_order")
+  device    Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId])
+  @@map("device_images")
+}
+
+model Advertiser {
+  id        String    @id @default(uuid()) @db.Uuid
+  email     String    @unique
+  name      String
+  phone     String
+  userId    String?   @unique @map("user_id") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at")
+  user      User?     @relation(fields: [userId], references: [id])
+  bookings  Booking[]
+
+  @@map("advertisers")
+}
+
+model Booking {
+  id                String          @id @default(uuid()) @db.Uuid
+  advertiserId      String          @map("advertiser_id") @db.Uuid
+  deviceId          String          @map("device_id") @db.Uuid
+  slotIndex         Int             @map("slot_index")
+  dateStart         DateTime        @map("date_start") @db.Date
+  dateEnd           DateTime        @map("date_end") @db.Date
+  priceTotal        Decimal         @map("price_total") @db.Decimal(10, 2)
+  venueSplitAmount  Decimal         @map("venue_split_amount") @db.Decimal(10, 2)
+  status            BookingStatus   @default(DRAFT)
+  holdExpiresAt     DateTime?       @map("hold_expires_at")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  advertiser        Advertiser      @relation(fields: [advertiserId], references: [id])
+  device            Device          @relation(fields: [deviceId], references: [id])
+  creative          Creative?
+  payment           Payment?
+  slotOccupancies   SlotOccupancy[]
+  events            BookingEvent[]
+
+  @@index([deviceId, status])
+  @@index([status, holdExpiresAt])
+  @@map("bookings")
+}
+
+model Creative {
+  id               String           @id @default(uuid()) @db.Uuid
+  bookingId        String           @unique @map("booking_id") @db.Uuid
+  imageUrl         String           @map("image_url")
+  width            Int
+  height           Int
+  fileSizeBytes    Int              @map("file_size_bytes")
+  moderationStatus ModerationStatus @default(PENDING) @map("moderation_status")
+  rejectionReason  String?          @map("rejection_reason")
+  uploadedAt       DateTime         @default(now()) @map("uploaded_at")
+  booking          Booking          @relation(fields: [bookingId], references: [id])
+
+  @@map("creatives")
+}
+
+model Payment {
+  id                String        @id @default(uuid()) @db.Uuid
+  bookingId         String        @unique @map("booking_id") @db.Uuid
+  razorpayOrderId   String?       @map("razorpay_order_id")
+  razorpayPaymentId String?       @unique @map("razorpay_payment_id")
+  amount            Decimal       @db.Decimal(10, 2)
+  status            PaymentStatus @default(CREATED)
+  createdAt         DateTime      @default(now()) @map("created_at")
+  booking           Booking       @relation(fields: [bookingId], references: [id])
+
+  @@map("payments")
+}
+
+model SlotOccupancy {
+  id        String   @id @default(uuid()) @db.Uuid
+  deviceId  String   @map("device_id") @db.Uuid
+  bookingId String   @map("booking_id") @db.Uuid
+  slotIndex Int      @map("slot_index")
+  playDate  DateTime @map("play_date") @db.Date
+  device    Device   @relation(fields: [deviceId], references: [id])
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([deviceId, slotIndex, playDate])
+  @@index([deviceId, playDate])
+  @@map("slot_occupancy")
+}
+
+model BookingEvent {
+  id         String         @id @default(uuid()) @db.Uuid
+  bookingId  String         @map("booking_id") @db.Uuid
+  fromStatus BookingStatus? @map("from_status")
+  toStatus   BookingStatus  @map("to_status")
+  actor      String
+  metadata   Json?
+  createdAt  DateTime       @default(now()) @map("created_at")
+  booking    Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@map("booking_events")
+}
+

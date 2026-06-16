@@ -1,0 +1,33 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalPassThroughEnv": [
+    "DATABASE_URL",
+    "JWT_ADMIN_SECRET",
+    "JWT_OWNER_SECRET",
+    "JWT_ADVERTISER_SECRET",
+    "JWT_DEVICE_SECRET",
+    "CORS_ORIGIN",
+    "CRON_SECRET",
+    "BUNNY_STORAGE_ZONE",
+    "BUNNY_STORAGE_API_KEY",
+    "BUNNY_STORAGE_HOSTNAME",
+    "BUNNY_CDN_HOSTNAME",
+    "BUNNY_API_KEY"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    }
+  }
+}

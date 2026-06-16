@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dooh-postgres
+    restart: unless-stopped
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: dooh
+      POSTGRES_PASSWORD: dooh_dev
+      POSTGRES_DB: dooh
+    volumes:
+      - dooh_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dooh -d dooh"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  dooh_pg_data:

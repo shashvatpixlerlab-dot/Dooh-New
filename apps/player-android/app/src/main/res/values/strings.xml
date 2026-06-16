@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DOOH Player</string>
+    <string name="login_title">Pair this screen</string>
+    <string name="credential_hint">Enter pairing credential</string>
+    <string name="pair_device">Pair device</string>
+    <string name="playing_ad">Playing advertisement</string>
+</resources>

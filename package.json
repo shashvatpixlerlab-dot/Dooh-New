@@ -1,0 +1,21 @@
+{
+  "name": "doohbg",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "db:generate": "pnpm --filter @dooh/db generate",
+    "db:migrate": "pnpm --filter @dooh/db migrate",
+    "db:seed": "pnpm --filter @dooh/db seed",
+    "setup": "docker compose -f infra/docker-compose.yml up -d && pnpm db:generate && pnpm --filter @dooh/db migrate:deploy && pnpm db:seed",
+    "db:studio": "pnpm --filter @dooh/db studio"
+  },
+  "devDependencies": {
+    "pnpm": "^9.15.0",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}

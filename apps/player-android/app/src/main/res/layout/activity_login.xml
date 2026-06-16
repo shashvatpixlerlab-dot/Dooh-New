@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="48dp"
+    android:background="#0f1117">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_title"
+        android:textColor="#ffffff"
+        android:textSize="28sp"
+        android:layout_marginBottom="24dp" />
+
+    <EditText
+        android:id="@+id/credentialInput"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/credential_hint"
+        android:inputType="textCapCharacters"
+        android:textColor="#ffffff"
+        android:textColorHint="#9aa3b2" />
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/pair_device" />
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="#9aa3b2" />
+</LinearLayout>
