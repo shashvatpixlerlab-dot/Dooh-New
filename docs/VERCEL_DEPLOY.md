@@ -34,6 +34,16 @@ curl https://YOUR-API.vercel.app/api/marketplace/devices
 
 Root: `apps/web`. Build/install in `apps/web/vercel.json`.
 
+In the Vercel dashboard (**Settings → General → Build & Development**):
+
+| Setting | Value |
+|---------|--------|
+| Framework Preset | **Next.js** |
+| Root Directory | `apps/web` |
+| Output Directory | *(leave empty — do not set `public`)* |
+
+If the build succeeds but deploy fails with `No Output Directory named "public"`, the project is misconfigured as a static site. Set Framework Preset to **Next.js** and clear Output Directory, then redeploy.
+
 Required env vars: `API_URL`, `NEXT_PUBLIC_API_URL`, `JWT_ADMIN_SECRET`, `JWT_OWNER_SECRET`, `JWT_ADVERTISER_SECRET`, `NEXT_PUBLIC_BUNNY_CDN_HOSTNAME`.
 
 JWT secrets must match the API project exactly.
