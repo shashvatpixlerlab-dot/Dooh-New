@@ -34,15 +34,25 @@ curl https://YOUR-API.vercel.app/api/marketplace/devices
 
 Root: `apps/web`. Build/install in `apps/web/vercel.json`.
 
-In the Vercel dashboard (**Settings → General → Build & Development**):
+**Critical:** In Vercel → **dooh-web** → **Settings** → **General** → **Root Directory**, set **`apps/web`**.  
+If Root Directory is blank (repo root), `apps/web/vercel.json` is ignored and deploy fails looking for a `public` output folder.
+
+Then under **Build & Development Settings**, turn **off** any overrides that conflict:
 
 | Setting | Value |
 |---------|--------|
 | Framework Preset | **Next.js** |
 | Root Directory | `apps/web` |
-| Output Directory | *(leave empty — do not set `public`)* |
+| Build Command | *(override off — use `apps/web/vercel.json`)* or `cd ../.. && pnpm turbo build --filter=@dooh/web` |
+| Output Directory | *(override off — leave empty; do not use `public`)* |
+| Install Command | *(override off — use `apps/web/vercel.json`)* or `cd ../.. && pnpm install` |
 
-If the build succeeds but deploy fails with `No Output Directory named "public"`, the project is misconfigured as a static site. Set Framework Preset to **Next.js** and clear Output Directory, then redeploy.
+If the build succeeds but deploy fails with `No Output Directory named "public"`:
+
+1. Confirm **Root Directory** is `apps/web` (not blank).
+2. Set **Framework Preset** to **Next.js**.
+3. Disable the **Output Directory** override (empty field).
+4. Redeploy (Deployments → … → Redeploy).
 
 Required env vars: `API_URL`, `NEXT_PUBLIC_API_URL`, `JWT_ADMIN_SECRET`, `JWT_OWNER_SECRET`, `JWT_ADVERTISER_SECRET`, `NEXT_PUBLIC_BUNNY_CDN_HOSTNAME`.
 
