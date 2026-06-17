@@ -21,6 +21,10 @@ function dbEnvKeyNames(): string[] {
   );
 }
 
+function jwtEnvKeyNames(): string[] {
+  return Object.keys(process.env).filter((k) => /JWT/i.test(k));
+}
+
 @Controller("health")
 export class HealthController {
   constructor(private prisma: PrismaService) {}
@@ -35,6 +39,7 @@ export class HealthController {
       usesPooler: dbUrl.includes("pooler"),
       port: dbUrl.match(/:(\d+)\//)?.[1] ?? null,
       dbEnvKeysFound: dbEnvKeyNames(),
+      jwtEnvKeysFound: jwtEnvKeyNames(),
       hasJwtOwnerSecret: Boolean(process.env.JWT_OWNER_SECRET),
       hasJwtAdvertiserSecret: Boolean(process.env.JWT_ADVERTISER_SECRET),
       hasJwtAdminSecret: Boolean(process.env.JWT_ADMIN_SECRET),
