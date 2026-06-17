@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
   "installCommand": "cd ../.. && pnpm install --prod=false",
   "buildCommand": "cd ../.. && pnpm run vercel:build:api && cd apps/api && bash scripts/vercel-postbuild.sh",
   "rewrites": [{ "source": "/(.*)", "destination": "/api/serverless" }],
