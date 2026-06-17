@@ -20,7 +20,11 @@ Use the Supabase **transaction pooler** URL as `DATABASE_URL` on the API project
 
 ## 2. API project (`dooh-api`)
 
-Root: `apps/api`. Build/install commands are in `apps/api/vercel.json`.
+Root: `apps/api`. Build/install in `apps/api/vercel.json`.
+
+**Framework Preset:** **Other** (not Next.js). **Output Directory:** leave empty.
+
+The API is a serverless NestJS app (`api/index.ts` → `dist/serverless.js`), not a static site — do not set Output Directory to `public`.
 
 Required env vars: `DATABASE_URL`, `CORS_ORIGIN`, `JWT_*`, `CRON_SECRET`, `BUNNY_*`, `NODE_ENV=production`.
 
