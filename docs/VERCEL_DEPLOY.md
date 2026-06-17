@@ -24,6 +24,8 @@ Use the Supabase **transaction pooler** URL as `DATABASE_URL` on the API project
 
 Root: `apps/api`. Build/install in `apps/api/vercel.json`.
 
+Install uses `pnpm install --filter @dooh/api...` so the API build does **not** install Next.js/sharp from `apps/web` (that was causing Vercel install failures).
+
 **Critical:** In Vercel → **dooh-api** → **Settings** → **General** → **Root Directory**, set **`apps/api`**.  
 If this is blank, the handler path breaks (`Cannot find module '../dist/serverless'`) and builds use the wrong layout.
 

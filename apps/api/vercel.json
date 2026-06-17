@@ -1,13 +1,13 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "installCommand": "cd ../.. && pnpm install --prod=false",
+  "installCommand": "cd ../.. && pnpm run vercel:install:api",
   "buildCommand": "cd ../.. && pnpm run vercel:build:api && cd apps/api && bash scripts/vercel-postbuild.sh",
   "rewrites": [{ "source": "/(.*)", "destination": "/api/serverless" }],
   "functions": {
     "api/serverless.js": {
       "maxDuration": 30,
-      "includeFiles": "{dist/**,node_modules/@dooh/**,node_modules/zod/**,node_modules/@prisma/**,node_modules/.prisma/**,node_modules/@dooh/db/dist/generated/client/*.node}"
+      "includeFiles": "{dist/**,node_modules/@dooh/**,node_modules/zod/**}"
     }
   },
   "crons": [
