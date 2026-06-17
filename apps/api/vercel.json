@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "installCommand": "cd ../.. && pnpm install",
+  "installCommand": "cd ../.. && pnpm install --prod=false",
   "buildCommand": "cd ../.. && pnpm db:generate && pnpm turbo build --filter=@dooh/api --filter=@dooh/db --filter=@dooh/shared && cd apps/api && bash scripts/vercel-postbuild.sh",
   "builds": [
     {

@@ -1,6 +1,9 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalPassThroughEnv": [
+    "NODE_ENV",
+    "API_URL",
+    "NEXT_PUBLIC_API_URL",
     "DATABASE_URL",
     "JWT_ADMIN_SECRET",
     "JWT_OWNER_SECRET",

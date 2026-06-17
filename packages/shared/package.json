@@ -5,9 +5,9 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "lint": "tsc --noEmit",
+    "build": "pnpm exec tsc",
+    "dev": "pnpm exec tsc --watch",
+    "lint": "pnpm exec tsc --noEmit",
     "test": "node --import tsx --test src/booking.test.ts"
   },
   "dependencies": {
