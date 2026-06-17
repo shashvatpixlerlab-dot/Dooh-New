@@ -1,25 +1,20 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "version": 2,
   "installCommand": "cd ../.. && pnpm install --prod=false",
   "buildCommand": "cd ../.. && pnpm run vercel:build:api && cd apps/api && bash scripts/vercel-postbuild.sh",
-  "builds": [
-    {
-      "src": "dist/vercel.js",
-      "use": "@vercel/node",
-      "config": {
-        "maxDuration": 30,
-        "includeFiles": [
-          "dist/**",
-          "node_modules/@dooh/db/dist/**",
-          "node_modules/@dooh/db/src/generated/**",
-          "node_modules/@dooh/shared/dist/**",
-          "node_modules/zod/**"
-        ]
-      }
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/serverless" }],
+  "functions": {
+    "api/serverless.js": {
+      "maxDuration": 30,
+      "includeFiles": [
+        "dist/**",
+        "node_modules/@dooh/db/dist/**",
+        "node_modules/@dooh/db/src/generated/**",
+        "node_modules/@dooh/shared/dist/**",
+        "node_modules/zod/**"
+      ]
     }
-  ],
-  "routes": [{ "src": "/(.*)", "dest": "/dist/vercel.js" }],
+  },
   "crons": [
     {
       "path": "/api/internal/cron/expire-holds",

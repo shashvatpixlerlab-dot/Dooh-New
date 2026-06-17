@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Vercel serverless runs from apps/api — replace workspace symlinks with real dist
-# bundles (copying full packages breaks nested node_modules symlinks like zod).
+# Bundle workspace packages for Vercel serverless and write the API handler.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
@@ -25,9 +24,10 @@ if [[ ! -f "$API/dist/serverless.js" ]]; then
   exit 1
 fi
 
-cat > "$API/dist/vercel.js" <<'EOF'
+# Plain JS handler for Vercel /api/serverless (modern functions config)
+cat > "$API/api/serverless.js" <<'EOF'
 "use strict";
-const { getExpressApp } = require("./serverless");
+const { getExpressApp } = require("../dist/serverless");
 
 module.exports = async function handler(req, res) {
   try {
@@ -49,4 +49,4 @@ module.exports = async function handler(req, res) {
 };
 EOF
 
-echo "Vercel postbuild: wrote dist/vercel.js and installed @dooh workspace dist bundles"
+echo "Vercel postbuild: wrote api/serverless.js and installed @dooh workspace dist bundles"
