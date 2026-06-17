@@ -13,7 +13,8 @@
           "dist/**",
           "node_modules/@dooh/db/dist/**",
           "node_modules/@dooh/db/src/generated/**",
-          "node_modules/@dooh/shared/dist/**"
+          "node_modules/@dooh/shared/dist/**",
+          "node_modules/zod/**"
         ]
       }
     }

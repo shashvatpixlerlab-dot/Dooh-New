@@ -6,7 +6,7 @@
     "build": "nest build",
     "dev": "nest start --watch",
     "start": "node dist/main.js",
-    "lint": "tsc --noEmit",
+    "lint": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "test": "node --import tsx --test src/booking/booking.service.test.ts src/e2e/scenarios.test.ts src/e2e/week6-hardening.integration.test.ts src/e2e/advertiser-booking.integration.test.ts"
   },
   "dependencies": {
@@ -26,7 +26,8 @@
     "express": "^4.21.2",
     "razorpay": "^2.9.5",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@dooh/config": "workspace:*",
