@@ -6,13 +6,7 @@
   "functions": {
     "api/serverless.js": {
       "maxDuration": 30,
-      "includeFiles": [
-        "dist/**",
-        "node_modules/@dooh/db/dist/**",
-        "node_modules/@dooh/db/src/generated/**",
-        "node_modules/@dooh/shared/dist/**",
-        "node_modules/zod/**"
-      ]
+      "includeFiles": "{dist/**,node_modules/@dooh/**,node_modules/zod/**}"
     }
   },
   "crons": [
