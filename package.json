@@ -11,7 +11,9 @@
     "db:migrate": "pnpm --filter @dooh/db migrate",
     "db:seed": "pnpm --filter @dooh/db seed",
     "setup": "docker compose -f infra/docker-compose.yml up -d && pnpm db:generate && pnpm --filter @dooh/db migrate:deploy && pnpm db:seed",
-    "db:studio": "pnpm --filter @dooh/db studio"
+    "db:studio": "pnpm --filter @dooh/db studio",
+    "vercel:build:web": "node node_modules/typescript/bin/tsc -p packages/shared/tsconfig.json && pnpm --dir apps/web run build",
+    "vercel:build:api": "pnpm db:generate && node node_modules/typescript/bin/tsc -p packages/shared/tsconfig.json && pnpm --dir packages/db run build && pnpm --dir apps/api run build"
   },
   "devDependencies": {
     "pnpm": "^9.15.0",
