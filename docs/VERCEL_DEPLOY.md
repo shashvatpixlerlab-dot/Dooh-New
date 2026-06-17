@@ -34,8 +34,10 @@ curl https://YOUR-API.vercel.app/api/marketplace/devices
 
 Root: `apps/web`. Build/install in `apps/web/vercel.json`.
 
-**Critical:** In Vercel → **dooh-web** → **Settings** → **General** → **Root Directory**, set **`apps/web`**.  
-If Root Directory is blank (repo root), `apps/web/vercel.json` is ignored and deploy fails looking for a `public` output folder.
+**Recommended:** In Vercel → **dooh-web** → **Settings** → **General** → **Root Directory**, set **`apps/web`**.
+
+If Root Directory is blank (repo root), Vercel uses the repo-root `vercel.json` (forces `@vercel/next` on `apps/web`).  
+Once Root Directory is `apps/web`, that root file is ignored and `apps/web/vercel.json` is used instead.
 
 Then under **Build & Development Settings**, turn **off** any overrides that conflict:
 

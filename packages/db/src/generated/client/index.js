@@ -312,7 +312,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/pixlerlab/Desktop/doohbg/packages/db/src/generated/client",
+      "value": "/Users/pixlerlab/Desktop/Projects/Dooh-New/packages/db/src/generated/client",
       "fromEnvVar": null
     },
     "config": {
@@ -326,7 +326,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/pixlerlab/Desktop/doohbg/packages/db/prisma/schema.prisma",
+    "sourceFilePath": "/Users/pixlerlab/Desktop/Projects/Dooh-New/packages/db/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

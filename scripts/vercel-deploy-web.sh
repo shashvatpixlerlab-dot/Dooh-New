@@ -14,8 +14,8 @@ ENV_FILE="${ROOT}/.env"
 API_URL="${1:-}"
 if [[ -z "$API_URL" ]]; then
   # shellcheck disable=SC1090
-  source <(grep -E '^API_URL=' "$ENV_FILE" | sed 's/^/export /')
-  API_URL="${API_URL:-}"
+  source <(grep -E '^(VERCEL_API_URL|API_URL)=' "$ENV_FILE" | sed 's/^/export /')
+  API_URL="${VERCEL_API_URL:-${API_URL:-}}"
 fi
 if [[ -z "$API_URL" ]]; then
   echo "Usage: $0 <API_URL>"
