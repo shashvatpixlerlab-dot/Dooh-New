@@ -19,10 +19,25 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ): Promise<void> {
-  // dist/ is produced by `nest build` in vercel.json buildCommand
-  const { getExpressApp } = require("../dist/serverless") as {
-    getExpressApp: GetExpressApp;
-  };
-  const app = await getExpressApp();
-  app(req, res);
+  try {
+    // dist/ is produced by `nest build` in vercel.json buildCommand
+    const { getExpressApp } = require("../dist/serverless") as {
+      getExpressApp: GetExpressApp;
+    };
+    const app = await getExpressApp();
+    app(req, res);
+  } catch (err) {
+    console.error("API handler error:", err);
+    if (!res.headersSent) {
+      res.statusCode = 500;
+      res.setHeader("Content-Type", "application/json");
+      res.end(
+        JSON.stringify({
+          statusCode: 500,
+          message:
+            err instanceof Error ? err.message : "Internal server error",
+        })
+      );
+    }
+  }
 }
