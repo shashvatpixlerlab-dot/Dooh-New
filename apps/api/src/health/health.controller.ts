@@ -1,18 +1,43 @@
 import { Controller, Get } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 
+function resolveDatabaseUrl(): string | undefined {
+  const url =
+    process.env.DATABASE_URL ??
+    process.env.VERCEL_DATABASE_URL ??
+    process.env.POSTGRES_URL ??
+    process.env.POSTGRES_PRISMA_URL ??
+    process.env.SUPABASE_DATABASE_URL;
+
+  if (url && !process.env.DATABASE_URL) {
+    process.env.DATABASE_URL = url;
+  }
+  return url;
+}
+
+function dbEnvKeyNames(): string[] {
+  return Object.keys(process.env).filter((k) =>
+    /DATABASE|POSTGRES|SUPABASE/i.test(k)
+  );
+}
+
 @Controller("health")
 export class HealthController {
   constructor(private prisma: PrismaService) {}
 
   @Get()
   async check() {
-    const dbUrl = process.env.DATABASE_URL ?? "";
+    const dbUrl = resolveDatabaseUrl() ?? "";
     const meta = {
       ok: true,
+      vercelEnv: process.env.VERCEL_ENV ?? null,
       hasDatabaseUrl: Boolean(dbUrl),
       usesPooler: dbUrl.includes("pooler"),
       port: dbUrl.match(/:(\d+)\//)?.[1] ?? null,
+      dbEnvKeysFound: dbEnvKeyNames(),
+      fix: !dbUrl
+        ? "Vercel → dooh-api (not dooh-new-web) → Environment Variables → DATABASE_URL → enable Production + Preview → Redeploy"
+        : undefined,
     };
 
     try {
