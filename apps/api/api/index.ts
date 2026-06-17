@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import type { Express } from "express";
+import type { Application } from "express";
 
 type VercelRequest = IncomingMessage & {
   query: Record<string, string | string[]>;
@@ -13,7 +13,7 @@ type VercelResponse = ServerResponse & {
   status: (code: number) => VercelResponse;
 };
 
-type GetExpressApp = () => Promise<Express>;
+type GetExpressApp = () => Promise<Application>;
 
 export default async function handler(
   req: VercelRequest,
