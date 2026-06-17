@@ -31,7 +31,7 @@ export class AuthService {
     }
 
     const passwordHash = await bcrypt.hash(dto.password, 12);
-
+    console.log("passwordHash in build time", passwordHash);
     if (dto.role === SignupRoleDto.SCREEN_OWNER) {
       const result = await this.prisma.$transaction(async (tx) => {
         const user = await tx.user.create({
