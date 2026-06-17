@@ -24,29 +24,4 @@ if [[ ! -f "$API/dist/serverless.js" ]]; then
   exit 1
 fi
 
-# Plain JS handler for Vercel /api/serverless (modern functions config)
-cat > "$API/api/serverless.js" <<'EOF'
-"use strict";
-const { getExpressApp } = require("../dist/serverless");
-
-module.exports = async function handler(req, res) {
-  try {
-    const app = await getExpressApp();
-    app(req, res);
-  } catch (err) {
-    console.error("API handler error:", err);
-    if (!res.headersSent) {
-      res.statusCode = 500;
-      res.setHeader("Content-Type", "application/json");
-      res.end(
-        JSON.stringify({
-          statusCode: 500,
-          message: err instanceof Error ? err.message : "Internal server error",
-        })
-      );
-    }
-  }
-};
-EOF
-
-echo "Vercel postbuild: wrote api/serverless.js and installed @dooh workspace dist bundles"
+echo "Vercel postbuild: installed @dooh workspace dist bundles"

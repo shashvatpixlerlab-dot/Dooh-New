@@ -47,4 +47,3 @@ apps/player-android/local.properties
 
 # Misc
 .vercel
-apps/api/api/serverless.js
