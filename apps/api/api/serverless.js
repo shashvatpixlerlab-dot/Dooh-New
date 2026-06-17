@@ -1,10 +1,12 @@
 "use strict";
-const { getExpressApp } = require("../dist/serverless");
 
 module.exports = async function handler(req, res) {
   try {
+    const { getExpressApp } = require("../dist/serverless");
     const app = await getExpressApp();
-    app(req, res);
+    await new Promise((resolve, reject) => {
+      app(req, res, (err) => (err ? reject(err) : resolve()));
+    });
   } catch (err) {
     console.error("API handler error:", err);
     if (!res.headersSent) {

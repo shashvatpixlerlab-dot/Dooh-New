@@ -24,4 +24,10 @@ if [[ ! -f "$API/dist/serverless.js" ]]; then
   exit 1
 fi
 
+ENGINE="$API/node_modules/@dooh/db/dist/generated/client/libquery_engine-rhel-openssl-3.0.x.so.node"
+if [[ ! -f "$ENGINE" ]]; then
+  echo "ERROR: Linux Prisma query engine missing at $ENGINE" >&2
+  exit 1
+fi
+
 echo "Vercel postbuild: installed @dooh workspace dist bundles"

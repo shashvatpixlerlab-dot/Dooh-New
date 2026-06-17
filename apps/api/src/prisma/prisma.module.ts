@@ -7,10 +7,7 @@ import { PrismaService } from "./prisma.service";
   providers: [
     {
       provide: PrismaService,
-      useFactory: async () => {
-        await prisma.$connect();
-        return prisma;
-      },
+      useFactory: () => prisma,
     },
   ],
   exports: [PrismaService],
