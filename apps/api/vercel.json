@@ -5,7 +5,7 @@
   "buildCommand": "cd ../.. && pnpm db:generate && pnpm turbo build --filter=@dooh/api --filter=@dooh/db --filter=@dooh/shared && cd apps/api && bash scripts/vercel-postbuild.sh",
   "builds": [
     {
-      "src": "api/index.ts",
+      "src": "dist/vercel.js",
       "use": "@vercel/node",
       "config": {
         "maxDuration": 30,
@@ -18,7 +18,7 @@
       }
     }
   ],
-  "routes": [{ "src": "/(.*)", "dest": "/api/index.ts" }],
+  "routes": [{ "src": "/(.*)", "dest": "/dist/vercel.js" }],
   "crons": [
     {
       "path": "/api/internal/cron/expire-holds",

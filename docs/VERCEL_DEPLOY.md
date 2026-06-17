@@ -22,6 +22,9 @@ Use the Supabase **transaction pooler** URL as `DATABASE_URL` on the API project
 
 Root: `apps/api`. Build/install in `apps/api/vercel.json`.
 
+**Critical:** In Vercel → **dooh-api** → **Settings** → **General** → **Root Directory**, set **`apps/api`**.  
+If this is blank, the handler path breaks (`Cannot find module '../dist/serverless'`) and builds use the wrong layout.
+
 **Framework Preset:** **Other** (not Next.js). **Output Directory:** leave empty.
 
 The API is a serverless NestJS app (`api/index.ts` → `dist/serverless.js`), not a static site — do not set Output Directory to `public`.
