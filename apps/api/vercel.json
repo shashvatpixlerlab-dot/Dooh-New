@@ -7,7 +7,7 @@
   "functions": {
     "api/serverless.js": {
       "maxDuration": 30,
-      "includeFiles": "{dist/**,node_modules/@dooh/**,node_modules/zod/**,node_modules/@prisma/**,node_modules/.prisma/**}"
+      "includeFiles": "{dist/**,node_modules/@dooh/**,node_modules/zod/**,node_modules/@prisma/**,node_modules/.prisma/**,node_modules/@dooh/db/dist/generated/client/*.node}"
     }
   },
   "crons": [

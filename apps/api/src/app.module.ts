@@ -15,6 +15,7 @@ import { OwnerModule } from "./owner/owner.module";
 import { AdvertiserModule } from "./advertiser/advertiser.module";
 import { HoldExpiryService } from "./booking/hold-expiry.service";
 import { InternalModule } from "./internal/internal.module";
+import { HealthModule } from "./health/health.module";
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { InternalModule } from "./internal/internal.module";
     MarketplaceModule,
     NotificationsModule,
     InternalModule,
+    HealthModule,
   ],
   providers: [HoldExpiryService],
 })

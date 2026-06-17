@@ -7,6 +7,8 @@ Deploy **two Vercel projects** from this monorepo:
 | `dooh-api` | `apps/api`     | Other     |
 | `dooh-web` | `apps/web`     | Next.js   |
 
+Project name on Vercel may be `dooh-new-web` instead of `dooh-web`.
+
 ## 1. Database (one-time, from your machine)
 
 ```bash
@@ -81,9 +83,33 @@ Event: `payment.captured`
 After `vercel login` (or with `VERCEL_TOKEN` set):
 
 ```bash
-# Add CRON_SECRET to .env first (openssl rand -base64 32)
-./scripts/vercel-deploy-api.sh
-./scripts/vercel-deploy-web.sh https://YOUR-API.vercel.app
-# Then set CORS_ORIGIN on API to your web URL and redeploy API
+# Add VERCEL_DATABASE_URL (pooler) to .env first
+./scripts/vercel-push-env.sh
+cd apps/api && vercel deploy --prod --yes
+cd ../web && vercel deploy --prod --yes
 ./scripts/vercel-verify.sh https://YOUR-API.vercel.app https://YOUR-WEB.vercel.app
 ```
+
+Or use the all-in-one scripts:
+
+```bash
+./scripts/vercel-deploy-api.sh
+./scripts/vercel-deploy-web.sh https://YOUR-API.vercel.app
+```
+
+### Manual dashboard setup (no CLI)
+
+```bash
+./scripts/vercel-env-checklist.sh
+```
+
+Copy each variable into **dooh-api** and **dooh-new-web** in the Vercel dashboard (Production + Preview), then redeploy both projects.
+
+Production URLs for this deployment:
+
+| Project | URL |
+|---------|-----|
+| API | `https://dooh-api-git-main-pixler-lab.vercel.app` |
+| Web | `https://dooh-new-web.vercel.app` |
+
+`DATABASE_URL` on the API must use the Supabase **transaction pooler** (port **6543**, host `*.pooler.supabase.com`). Direct `:5432` URLs fail on serverless.

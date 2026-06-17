@@ -4,11 +4,10 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT/apps/web"
+# shellcheck source=vercel-env-lib.sh
+source "$ROOT/scripts/vercel-env-lib.sh"
 
-if [[ -z "${VERCEL_TOKEN:-}" ]] && ! vercel whoami &>/dev/null; then
-  echo "ERROR: Run 'vercel login' or set VERCEL_TOKEN"
-  exit 1
-fi
+vercel_require_auth
 
 ENV_FILE="${ROOT}/.env"
 API_URL="${1:-}"
@@ -29,28 +28,22 @@ source <(grep -E '^(JWT_ADMIN_SECRET|JWT_OWNER_SECRET|JWT_ADVERTISER_SECRET|NEXT
 export NODE_ENV=production
 BUNNY_HOST="${NEXT_PUBLIC_BUNNY_CDN_HOSTNAME:-${BUNNY_CDN_HOSTNAME:-}}"
 
-echo "==> Linking dooh-web..."
-vercel link --yes --project dooh-web 2>/dev/null || vercel link --yes
+echo "==> Linking dooh-new-web..."
+vercel link --yes --project dooh-new-web 2>/dev/null || vercel link --yes
 
-echo "==> Pushing env vars..."
-for key in NODE_ENV API_URL NEXT_PUBLIC_API_URL JWT_ADMIN_SECRET JWT_OWNER_SECRET JWT_ADVERTISER_SECRET; do
-  case "$key" in
-    API_URL|NEXT_PUBLIC_API_URL) val="$API_URL" ;;
-    *) val="${!key:-}" ;;
-  esac
-  [[ -z "$val" ]] && continue
-  vercel env rm "$key" production -y 2>/dev/null || true
-  printf '%s' "$val" | vercel env add "$key" production
+echo "==> Pushing env vars (production + preview)..."
+for key in NODE_ENV JWT_ADMIN_SECRET JWT_OWNER_SECRET JWT_ADVERTISER_SECRET; do
+  vercel_push_env "$key" "${!key:-}"
 done
+vercel_push_env API_URL "$API_URL"
+vercel_push_env NEXT_PUBLIC_API_URL "$API_URL"
 if [[ -n "$BUNNY_HOST" ]]; then
-  vercel env rm NEXT_PUBLIC_BUNNY_CDN_HOSTNAME production -y 2>/dev/null || true
-  printf '%s' "$BUNNY_HOST" | vercel env add NEXT_PUBLIC_BUNNY_CDN_HOSTNAME production
+  vercel_push_env NEXT_PUBLIC_BUNNY_CDN_HOSTNAME "$BUNNY_HOST"
 fi
 
 echo "==> Deploying web..."
 vercel deploy --prod --yes
 
 echo ""
-echo "After deploy, update API CORS_ORIGIN to your web URL and redeploy API:"
-echo "  cd apps/api && vercel env add CORS_ORIGIN production"
-echo "  vercel deploy --prod --yes"
+echo "Done. Ensure API CORS_ORIGIN includes your web URL, then verify:"
+echo "  ./scripts/vercel-verify.sh $API_URL https://dooh-new-web.vercel.app"
