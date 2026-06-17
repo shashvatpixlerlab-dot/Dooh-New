@@ -155,11 +155,21 @@ export class AuthService {
     return { token, user: this.toUserResponse(user, { venueId: venue.id }) };
   }
 
+  private jwtSecret(name: string): string {
+    const secret = this.config.get<string>(name);
+    if (!secret) {
+      throw new BadRequestException(
+        `${name} is not set on the API. Add it in Vercel → dooh-api → Environment Variables, then redeploy.`
+      );
+    }
+    return secret;
+  }
+
   private signAdminToken(user: { id: string; email: string }) {
     return this.jwt.sign(
       { sub: user.id, email: user.email, type: "admin", role: "ADMIN" },
       {
-        secret: this.config.get<string>("JWT_ADMIN_SECRET"),
+        secret: this.jwtSecret("JWT_ADMIN_SECRET"),
         expiresIn: "8h",
       }
     );
@@ -175,7 +185,7 @@ export class AuthService {
         venueId,
       },
       {
-        secret: this.config.get<string>("JWT_OWNER_SECRET"),
+        secret: this.jwtSecret("JWT_OWNER_SECRET"),
         expiresIn: "8h",
       }
     );
@@ -194,7 +204,7 @@ export class AuthService {
         advertiserId,
       },
       {
-        secret: this.config.get<string>("JWT_ADVERTISER_SECRET"),
+        secret: this.jwtSecret("JWT_ADVERTISER_SECRET"),
         expiresIn: "8h",
       }
     );

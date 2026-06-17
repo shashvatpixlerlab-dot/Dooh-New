@@ -35,9 +35,14 @@ export class HealthController {
       usesPooler: dbUrl.includes("pooler"),
       port: dbUrl.match(/:(\d+)\//)?.[1] ?? null,
       dbEnvKeysFound: dbEnvKeyNames(),
+      hasJwtOwnerSecret: Boolean(process.env.JWT_OWNER_SECRET),
+      hasJwtAdvertiserSecret: Boolean(process.env.JWT_ADVERTISER_SECRET),
+      hasJwtAdminSecret: Boolean(process.env.JWT_ADMIN_SECRET),
       fix: !dbUrl
         ? "Vercel → dooh-api (not dooh-new-web) → Environment Variables → DATABASE_URL → enable Production + Preview → Redeploy"
-        : undefined,
+        : !process.env.JWT_OWNER_SECRET || !process.env.JWT_ADVERTISER_SECRET
+          ? "Add JWT_OWNER_SECRET and JWT_ADVERTISER_SECRET to dooh-api on Vercel, then redeploy"
+          : undefined,
     };
 
     try {
