@@ -59,7 +59,7 @@ export default async function AdvertiserDashboardPage() {
             </Badge>
           ) : (
             <Button asChild>
-              <Link href="/#screens" className="gap-2 text-primary-foreground">
+              <Link href="/?section=screens" className="gap-2 text-primary-foreground">
                 <Store className="h-4 w-4" />
                 Book a screen
               </Link>
@@ -111,7 +111,7 @@ export default async function AdvertiserDashboardPage() {
             </p>
           </div>
           <Button asChild size="sm" variant="outline">
-            <Link href="/#screens">Browse screens</Link>
+            <Link href="/?section=screens">Browse screens</Link>
           </Button>
         </CardHeader>
         <CardContent className="p-0">
@@ -127,7 +127,7 @@ export default async function AdvertiserDashboardPage() {
                 </p>
               </div>
               <Button asChild>
-                <Link href="/#screens" className="text-primary-foreground">
+                <Link href="/?section=screens" className="text-primary-foreground">
                   Browse screens
                 </Link>
               </Button>

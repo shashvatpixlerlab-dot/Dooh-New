@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { SiteNav } from "./SiteNav";
-import { ThemeToggle } from "./ThemeToggle";
 
 export function SiteHeader() {
   return (
@@ -13,7 +12,6 @@ export function SiteHeader() {
       </Link>
       <div className="site-header-actions">
         <SiteNav />
-        <ThemeToggle />
       </div>
     </header>
   );

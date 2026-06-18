@@ -1,22 +1,23 @@
 import Link from "next/link";
+import { AuthFormCard } from "@/components/auth/AuthFormCard";
 import { LoginForm } from "@/components/auth/LoginForm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import auth from "@/components/auth/styles/auth.module.css";
 
 export default function LoginPage() {
   return (
-    <Card className="shadow-lg">
-      <CardHeader className="text-center">
-        <Link href="/" className="text-2xl font-bold text-primary">
-          DOOH Network
-        </Link>
-        <CardTitle className="mt-4">Sign in</CardTitle>
-        <CardDescription>
-          Access your admin, screen owner, or advertiser dashboard
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <LoginForm />
-      </CardContent>
-    </Card>
+    <AuthFormCard
+      title="Welcome back"
+      description="Sign in to your admin, owner, or advertiser dashboard"
+      footer={
+        <>
+          Don&apos;t have an account?{" "}
+          <Link href="/signup" className={auth.footerLink}>
+            Create one
+          </Link>
+        </>
+      }
+    >
+      <LoginForm />
+    </AuthFormCard>
   );
 }

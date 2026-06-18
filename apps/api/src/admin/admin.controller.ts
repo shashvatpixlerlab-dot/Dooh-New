@@ -11,7 +11,6 @@ import {
 import { BookingStatus, DeviceApprovalStatus, RevenueModel } from "@dooh/db";
 import { AdminService } from "./admin.service";
 import { AdminAuthGuard } from "../auth/admin-auth.guard";
-import { AdminLoginDto } from "./dto/admin-login.dto";
 import { CreateVenueDto } from "./dto/create-venue.dto";
 import { CreateDeviceDto } from "./dto/create-device.dto";
 import { UpdateVenueDto } from "./dto/update-venue.dto";
@@ -22,11 +21,6 @@ import { RejectScreenDto } from "./dto/reject-screen.dto";
 @Controller("admin")
 export class AdminController {
   constructor(private admin: AdminService) {}
-
-  @Post("login")
-  login(@Body() dto: AdminLoginDto) {
-    return this.admin.login(dto.email, dto.password);
-  }
 
   @UseGuards(AdminAuthGuard)
   @Get("venues")

@@ -6,6 +6,7 @@ import {
 } from "../src/generated/client";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
+import { ensureSupabaseAuthUser } from "./scripts/supabase-seed";
 
 const prisma = new PrismaClient();
 
@@ -156,44 +157,53 @@ const VENUES = [
 async function main() {
   const adminEmail = process.env.ADMIN_EMAIL ?? "admin@yopmail.com";
   const adminPassword = process.env.ADMIN_PASSWORD ?? "Test@1233";
-  const adminPasswordHash = await bcrypt.hash(adminPassword, 12);
+  const adminSupabaseId = await ensureSupabaseAuthUser({
+    email: adminEmail,
+    password: adminPassword,
+    appMetadata: { role: UserRole.ADMIN },
+  });
 
   await prisma.user.upsert({
     where: { email: adminEmail },
     update: {
       name: "Admin",
       role: UserRole.ADMIN,
-      passwordHash: adminPasswordHash,
+      ...(adminSupabaseId ? { supabaseUserId: adminSupabaseId, passwordHash: null } : {}),
     },
     create: {
       email: adminEmail,
       name: "Admin",
       phone: "+910000000000",
       role: UserRole.ADMIN,
-      passwordHash: adminPasswordHash,
+      supabaseUserId: adminSupabaseId,
     },
   });
 
   const ownerEmail = process.env.OWNER_EMAIL ?? "owner@yopmail.com";
   const ownerPassword = process.env.OWNER_PASSWORD ?? "Test@1233";
-  const ownerPasswordHash = await bcrypt.hash(ownerPassword, 12);
+  const ownerSupabaseId = await ensureSupabaseAuthUser({
+    email: ownerEmail,
+    password: ownerPassword,
+    appMetadata: { role: UserRole.SCREEN_OWNER },
+  });
+
   const owner = await prisma.user.upsert({
     where: { email: ownerEmail },
     update: {
       name: "Demo Screen Owner",
       role: UserRole.SCREEN_OWNER,
-      passwordHash: ownerPasswordHash,
+      ...(ownerSupabaseId ? { supabaseUserId: ownerSupabaseId, passwordHash: null } : {}),
     },
     create: {
       email: ownerEmail,
       name: "Demo Screen Owner",
       phone: "+919999990099",
       role: UserRole.SCREEN_OWNER,
-      passwordHash: ownerPasswordHash,
+      supabaseUserId: ownerSupabaseId,
     },
   });
 
-  await prisma.venue.upsert({
+  const ownerVenue = await prisma.venue.upsert({
     where: { id: "00000000-0000-4000-8000-000000000099" },
     update: { ownerId: owner.id },
     create: {
@@ -208,6 +218,14 @@ async function main() {
       ownerId: owner.id,
     },
   });
+
+  if (ownerSupabaseId) {
+    await ensureSupabaseAuthUser({
+      email: ownerEmail,
+      password: ownerPassword,
+      appMetadata: { role: UserRole.SCREEN_OWNER, venueId: ownerVenue.id },
+    });
+  }
 
   const credentials: string[] = [];
   const stale = new Date(Date.now() - 60 * 60 * 1000);
@@ -268,24 +286,31 @@ async function main() {
 
   const advertiserEmail = process.env.ADVERTISER_EMAIL ?? "advertiser@yopmail.com";
   const advertiserPassword = process.env.ADVERTISER_PASSWORD ?? "Test@1233";
-  const advertiserPasswordHash = await bcrypt.hash(advertiserPassword, 12);
+  const advertiserSupabaseId = await ensureSupabaseAuthUser({
+    email: advertiserEmail,
+    password: advertiserPassword,
+    appMetadata: { role: UserRole.ADVERTISER },
+  });
+
   const advertiserUser = await prisma.user.upsert({
     where: { email: advertiserEmail },
     update: {
       name: "Demo Advertiser",
       role: UserRole.ADVERTISER,
-      passwordHash: advertiserPasswordHash,
+      ...(advertiserSupabaseId
+        ? { supabaseUserId: advertiserSupabaseId, passwordHash: null }
+        : {}),
     },
     create: {
       email: advertiserEmail,
       name: "Demo Advertiser",
       phone: "+919999990088",
       role: UserRole.ADVERTISER,
-      passwordHash: advertiserPasswordHash,
+      supabaseUserId: advertiserSupabaseId,
     },
   });
 
-  await prisma.advertiser.upsert({
+  const advertiser = await prisma.advertiser.upsert({
     where: { email: advertiserEmail },
     update: {
       userId: advertiserUser.id,
@@ -299,6 +324,17 @@ async function main() {
       userId: advertiserUser.id,
     },
   });
+
+  if (advertiserSupabaseId) {
+    await ensureSupabaseAuthUser({
+      email: advertiserEmail,
+      password: advertiserPassword,
+      appMetadata: {
+        role: UserRole.ADVERTISER,
+        advertiserId: advertiser.id,
+      },
+    });
+  }
 
   const deviceCount = await prisma.device.count();
   const onlineCount = await prisma.device.count({

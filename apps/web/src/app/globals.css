@@ -2,46 +2,68 @@
 
 @source "../../**/*.{ts,tsx}";
 
-/* ── shadcn/ui tokens (mapped to DOOH theme) ── */
-:root,
-[data-theme="dark"] {
-  --background: #0a0c10;
-  --foreground: #f0f2f7;
-  --card: #161a24;
-  --card-foreground: #f0f2f7;
-  --popover: #161a24;
-  --popover-foreground: #f0f2f7;
-  --primary: #4f8cff;
-  --primary-foreground: #ffffff;
-  --secondary: #1c2130;
-  --secondary-foreground: #f0f2f7;
-  --muted-foreground: #8b95a8;
-  --accent-foreground: #f0f2f7;
-  --destructive: #f87171;
-  --destructive-foreground: #ffffff;
-  --input: #2a3042;
-  --ring: #4f8cff;
-  --radius: 0.5rem;
-}
-
-[data-theme="light"] {
-  --background: #f4f6fa;
-  --foreground: #111827;
+/* â”€â”€ Design tokens â€” Tracle-inspired light theme (#6E69EE) â”€â”€ */
+:root {
+  --background: #f8f8fc;
+  --foreground: #09090b;
   --card: #ffffff;
-  --card-foreground: #111827;
+  --card-foreground: #09090b;
   --popover: #ffffff;
-  --popover-foreground: #111827;
-  --primary: #2563eb;
+  --popover-foreground: #09090b;
+  --primary: #6e69ee;
   --primary-foreground: #ffffff;
-  --secondary: #f0f3f9;
-  --secondary-foreground: #111827;
-  --muted-foreground: #64748b;
-  --accent-foreground: #111827;
+  --secondary: #f4f3ff;
+  --secondary-foreground: #3d3a8c;
+  --muted-foreground: #52506a;
+  --accent-foreground: #3d3a8c;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --input: #dde3ee;
-  --ring: #2563eb;
+  --input: #e4e3f0;
+  --ring: #6e69ee;
+  --radius: 0.625rem;
+  --tracle-primary: #6e69ee;
+  --tracle-primary-light: #8b85ff;
+  --tracle-primary-dark: #5a55d6;
+  --tracle-muted: #b1aec4;
+  --tracle-glow: rgba(110, 105, 238, 0.45);
+  --tracle-glow-soft: rgba(110, 105, 238, 0.15);
+  --bg: #f8f8fc;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-hover: #f4f4f8;
+  --border: #e4e4ec;
+  --border-subtle: #f0f0f5;
+  --text: #09090b;
+  --muted: #52506a;
+  --accent: #6e69ee;
+  --accent-dim: rgba(110, 105, 238, 0.1);
+  --accent-glow: rgba(110, 105, 238, 0.22);
+  --link: #4f46e5;
+  --link-hover: #4338ca;
+  --link-on-dark: #a5b4fc;
+  --link-on-dark-hover: #c7d2fe;
+  --footer-bg: #252525;
+  --footer-fg: #fafafa;
+  --footer-muted: #bdbdc0;
+  --footer-border: rgba(255, 255, 255, 0.1);
+  --footer-accent: rgba(110, 105, 238, 0.35);
+  --success: #10b981;
+  --success-bright: #34d399;
+  --success-dim: rgba(16, 185, 129, 0.12);
+  --success-glow: rgba(16, 185, 129, 0.55);
+  --warning: #d97706;
+  --warning-dim: rgba(217, 119, 6, 0.1);
+  --danger: #dc2626;
+  --danger-dim: rgba(220, 38, 38, 0.1);
+  --header-bg: rgba(248, 248, 252, 0.88);
+  --overlay-gradient: linear-gradient(to top, rgba(248, 248, 252, 0.94), transparent 50%);
+  --shadow: 0 1px 3px rgba(9, 9, 11, 0.05), 0 4px 20px rgba(110, 105, 238, 0.04);
+  --shadow-lg: 0 4px 28px rgba(9, 9, 11, 0.07), 0 12px 40px rgba(110, 105, 238, 0.06);
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, sans-serif;
+  --layout-max: 1280px;
+  --admin-sidebar-w: 260px;
 }
+
 
 @theme inline {
   --color-background: var(--background);
@@ -63,6 +85,8 @@
   --color-border: var(--input);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-link: var(--link);
+  --color-success: var(--success);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -70,59 +94,60 @@
 }
 
 
-/* ── Theme tokens (dark = default on :root so CSS works before JS) ── */
-:root,
-[data-theme="dark"] {
-  --bg: #0a0c10;
-  --bg-elevated: #11141c;
-  --surface: #161a24;
-  --surface-hover: #1c2130;
-  --border: #2a3042;
-  --border-subtle: #1f2433;
-  --text: #f0f2f7;
-  --muted: #8b95a8;
-  --accent: #4f8cff;
-  --accent-dim: rgba(79, 140, 255, 0.12);
-  --accent-glow: rgba(79, 140, 255, 0.25);
-  --success: #34d399;
-  --success-dim: rgba(52, 211, 153, 0.15);
-  --warning: #fbbf24;
-  --warning-dim: rgba(251, 191, 36, 0.12);
-  --danger: #f87171;
-  --danger-dim: rgba(248, 113, 113, 0.12);
-  --header-bg: rgba(17, 20, 28, 0.85);
-  --overlay-gradient: linear-gradient(to top, rgba(10, 12, 16, 0.75), transparent 50%);
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --radius: 12px;
-  --radius-sm: 8px;
-  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
-  --layout-max: 1440px;
-  --admin-sidebar-w: 240px;
+
+
+
+/* 3D elevated cards (dashboard / buttons - not hero banners) */
+.tracle-card-3d {
+  background: var(--card);
+  box-shadow: 0 1px 2px rgba(9, 9, 11, 0.05);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-[data-theme="light"] {
-  --bg: #f4f6fa;
-  --bg-elevated: #ffffff;
-  --surface: #ffffff;
-  --surface-hover: #f0f3f9;
-  --border: #dde3ee;
-  --border-subtle: #e8edf5;
-  --text: #111827;
-  --muted: #64748b;
-  --accent: #2563eb;
-  --accent-dim: rgba(37, 99, 235, 0.1);
-  --accent-glow: rgba(37, 99, 235, 0.2);
-  --success: #059669;
-  --success-dim: rgba(5, 150, 105, 0.1);
-  --warning: #d97706;
-  --warning-dim: rgba(217, 119, 6, 0.1);
-  --danger: #dc2626;
-  --danger-dim: rgba(220, 38, 38, 0.1);
-  --header-bg: rgba(255, 255, 255, 0.9);
-  --overlay-gradient: linear-gradient(to top, rgba(255, 255, 255, 0.85), transparent 50%);
-  --shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 8px 30px rgba(15, 23, 42, 0.12);
+.tracle-card-3d:hover {
+  border-color: color-mix(in srgb, var(--tracle-primary) 20%, var(--input));
+  background: color-mix(in srgb, var(--tracle-primary) 2%, var(--card));
+}
+
+
+
+/* 3D primary buttons */
+a.bg-primary,
+button.bg-primary,
+.bg-primary:is(a, button),
+[data-slot="button"].bg-primary {
+  background: linear-gradient(
+    180deg,
+    var(--tracle-primary-light) 0%,
+    var(--tracle-primary) 48%,
+    var(--tracle-primary-dark) 100%
+  );
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.28) inset,
+    0 4px 18px var(--tracle-glow),
+    0 2px 4px rgba(110, 105, 238, 0.2);
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+a.bg-primary:hover,
+button.bg-primary:hover,
+.bg-primary:is(a, button):hover,
+[data-slot="button"].bg-primary:hover {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tracle-primary-light) 90%, white) 0%,
+    var(--tracle-primary) 50%,
+    var(--tracle-primary-dark) 100%
+  );
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.32) inset,
+    0 8px 28px var(--tracle-glow),
+    0 4px 8px rgba(110, 105, 238, 0.25);
+}
+
+.tracle-icon-3d {
+  background: var(--secondary);
+  color: var(--tracle-primary);
 }
 
 * {
@@ -130,8 +155,10 @@
 }
 
 html {
+  color-scheme: light;
   background: var(--bg);
   color: var(--text);
+  scroll-behavior: smooth;
 }
 
 body {
@@ -151,7 +178,7 @@ a {
   text-decoration: none;
 }
 
-/* Filled primary/destructive controls (links + buttons) — beats `a { color: inherit }` */
+/* Filled primary/destructive controls (links + buttons) â€” beats `a { color: inherit }` */
 a.bg-primary,
 button.bg-primary,
 .bg-primary:is(a, button),
@@ -184,7 +211,7 @@ h1, h2, h3, h4 {
   letter-spacing: -0.02em;
 }
 
-/* ── Header / footer ── */
+/* â”€â”€ Header / footer â”€â”€ */
 .site-header {
   border-bottom: 1px solid var(--border-subtle);
   background: var(--header-bg);
@@ -241,36 +268,22 @@ h1, h2, h3, h4 {
   transition: color 0.15s, background 0.15s;
 }
 
-.site-nav a:hover,
+.site-nav a:hover {
+  color: var(--tracle-primary-dark);
+  background: var(--accent-dim);
+}
+
 .site-nav a.nav-active {
-  color: var(--text);
-  background: var(--accent-dim);
+  color: var(--tracle-primary-dark);
+  background: color-mix(in srgb, var(--tracle-primary) 12%, var(--secondary));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tracle-primary) 22%, transparent);
 }
 
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--muted);
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, background 0.15s;
-}
 
-.theme-toggle:hover:not(:disabled) {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: var(--accent-dim);
-}
 
-.theme-toggle-sidebar {
-  width: 100%;
-  margin-bottom: 0.75rem;
-}
+
+
+
 
 .site-main {
   flex: 1;
@@ -281,8 +294,14 @@ h1, h2, h3, h4 {
 }
 
 .site-footer {
-  border-top: 1px solid var(--border-subtle);
-  background: var(--bg-elevated);
+  border-top: 1px solid var(--footer-border);
+  background: var(--footer-bg);
+  color: var(--footer-muted);
+}
+
+.site-footer p {
+  margin: 0.25rem 0;
+  color: var(--footer-muted);
 }
 
 .site-footer-inner {
@@ -293,8 +312,8 @@ h1, h2, h3, h4 {
   text-align: center;
 }
 
-.site-footer p {
-  margin: 0.25rem 0;
+.site-footer .muted {
+  color: var(--footer-muted);
 }
 
 /* Hide marketplace chrome inside admin */
@@ -317,11 +336,7 @@ body:has(.admin-login-wrap) .site-main {
   width: 100%;
 }
 
-.admin-login-top {
-  position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-}
+
 
 .login-card {
   width: 100%;
@@ -334,7 +349,7 @@ body:has(.admin-login-wrap) .site-main {
   font-size: 1.5rem;
 }
 
-/* ── Admin shell: sidebar fixed left, content fills rest ── */
+/* â”€â”€ Admin shell: sidebar fixed left, content fills rest â”€â”€ */
 .admin-layout {
   min-height: 100vh;
   width: 100%;
@@ -588,7 +603,7 @@ body:has(.admin-login-wrap) .site-main {
 .admin-snapshot-bar-fill {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--success), var(--accent));
+  background: var(--success);
   transition: width 0.3s ease;
 }
 
@@ -598,9 +613,7 @@ body:has(.admin-login-wrap) .site-main {
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background:
-    radial-gradient(ellipse at top, var(--accent-dim), transparent 60%),
-    var(--bg);
+  background: var(--bg);
 }
 
 .admin-page-header h1 {
@@ -610,7 +623,7 @@ body:has(.admin-login-wrap) .site-main {
   letter-spacing: -0.03em;
 }
 
-/* ── Components ── */
+/* â”€â”€ Components â”€â”€ */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -631,7 +644,7 @@ body:has(.admin-login-wrap) .site-main {
   justify-content: center;
   gap: 0.4rem;
   padding: 0.65rem 1.25rem;
-  background: linear-gradient(135deg, var(--accent), #3b6fd9);
+  background: var(--accent);
   color: var(--primary-foreground, #ffffff);
   border: none;
   border-radius: var(--radius-sm);
@@ -660,7 +673,7 @@ body:has(.admin-login-wrap) .site-main {
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, var(--danger), #b91c1c);
+  background: var(--danger);
   color: var(--destructive-foreground, #ffffff);
   box-shadow: 0 2px 12px var(--danger-dim);
 }
@@ -713,7 +726,7 @@ label {
   letter-spacing: 0.04em;
 }
 
-/* Auth + owner dashboard — override legacy global form styles */
+/* Auth + owner dashboard â€” override legacy global form styles */
 :is(.auth-shell, .owner-shell, .dashboard-shell, .app-dialog) label {
   display: block;
   margin-bottom: 0.375rem;
@@ -805,9 +818,7 @@ label {
   margin-top: 1rem;
 }
 
-.owner-shell .theme-toggle-sidebar {
-  width: 100%;
-}
+
 
 .badge {
   display: inline-flex;
@@ -885,14 +896,12 @@ tr:hover td {
 .muted { color: var(--muted); }
 .small { font-size: 0.85rem; }
 
-/* ── Marketplace hero ── */
+/* â”€â”€ Marketplace hero â”€â”€ */
 .page-hero {
   margin-bottom: 2rem;
   padding: 2rem 2.25rem;
   border-radius: var(--radius);
-  background:
-    radial-gradient(ellipse at top right, var(--accent-dim), transparent 55%),
-    var(--surface);
+  background: var(--surface);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
 }
@@ -1072,7 +1081,7 @@ tr:hover td {
   background: var(--accent-dim);
 }
 
-/* ── Device cards ── */
+/* â”€â”€ Device cards â”€â”€ */
 .device-card {
   padding: 0;
   overflow: hidden;
@@ -1099,6 +1108,14 @@ tr:hover td {
 .device-card-image img,
 .device-detail-image img {
   object-fit: cover;
+}
+
+.device-detail-image > span {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .device-card-image::after {
@@ -1144,27 +1161,62 @@ tr:hover td {
   filter: grayscale(0.5);
 }
 
-/* ── Device detail ── */
+/* â”€â”€ Device detail â”€â”€ */
+.device-detail {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+main:has(.device-detail) {
+  margin-top: 0;
+  padding-top: 5.5rem;
+}
+
+@media (min-width: 640px) {
+  main:has(.device-detail) {
+    padding-top: 6rem;
+  }
+}
+
 .device-detail-hero {
   display: grid;
   gap: 2rem;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  min-width: 0;
 }
 
 @media (min-width: 720px) {
   .device-detail-hero {
-    grid-template-columns: 380px 1fr;
+    grid-template-columns: min(380px, 100%) minmax(0, 1fr);
   }
 }
 
 .device-detail-image {
   position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 380px;
   aspect-ratio: 16 / 9;
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
+}
+
+.device-detail-content {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.device-detail-content h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.15;
 }
 
 .device-meta {
@@ -1308,7 +1360,7 @@ tr:hover td {
   margin-right: auto;
 }
 
-/* ── Booking status ── */
+/* â”€â”€ Booking status â”€â”€ */
 .booking-status .back-link {
   display: inline-flex;
   align-items: center;
@@ -1426,7 +1478,7 @@ tr:hover td {
   margin: 0.5rem 0 0;
 }
 
-/* ── Admin pages ── */
+/* â”€â”€ Admin pages â”€â”€ */
 .admin-dashboard-grid,
 .admin-venues-grid {
   display: grid;
@@ -1579,7 +1631,7 @@ tr:hover td {
   gap: 1.25rem;
 }
 
-/* Laptop up to 1440px — content uses full remaining width */
+/* Laptop up to 1440px â€” content uses full remaining width */
 @media (min-width: 769px) and (max-width: 1440px) {
   .admin-content {
     padding: 1.35rem 1.5rem 2.5rem;
@@ -1670,10 +1722,7 @@ tr:hover td {
     margin-left: auto;
   }
 
-  .theme-toggle-sidebar {
-    width: auto;
-    margin: 0;
-  }
+
 
   .admin-user-email {
     display: none;

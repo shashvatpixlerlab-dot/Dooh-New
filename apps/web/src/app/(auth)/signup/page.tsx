@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { AuthFormCard } from "@/components/auth/AuthFormCard";
 import { SignupForm } from "@/components/auth/SignupForm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import auth from "@/components/auth/styles/auth.module.css";
 
 export default async function SignupPage({
   searchParams,
@@ -17,20 +18,22 @@ export default async function SignupPage({
         : undefined;
 
   return (
-    <Card className="shadow-lg">
-      <CardHeader className="text-center">
-        <Link href="/" className="text-2xl font-bold text-primary">
-          DOOH Network
-        </Link>
-        <CardTitle className="mt-4">Create account</CardTitle>
-        <CardDescription>Join as a Screen Owner or Advertiser</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <SignupForm
-          defaultEmail={defaultEmail}
-          defaultRole={defaultRole ?? "SCREEN_OWNER"}
-        />
-      </CardContent>
-    </Card>
+    <AuthFormCard
+      title="Create your account"
+      description="Join as a Screen Owner or Advertiser"
+      footer={
+        <>
+          Already have an account?{" "}
+          <Link href="/login" className={auth.footerLink}>
+            Sign in
+          </Link>
+        </>
+      }
+    >
+      <SignupForm
+        defaultEmail={defaultEmail}
+        defaultRole={defaultRole ?? "SCREEN_OWNER"}
+      />
+    </AuthFormCard>
   );
 }

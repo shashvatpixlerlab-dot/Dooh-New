@@ -18,7 +18,7 @@ export function ScreenTableThumb({
       <div
         className={cn(
           "relative h-12 w-12 overflow-hidden rounded-lg border border-input bg-secondary shadow-sm",
-          "ring-1 ring-black/5 dark:ring-white/10"
+          "ring-1 ring-black/5"
         )}
       >
         <Image src={resolveImageUrl(src)} alt={alt} fill className="object-cover" unoptimized />

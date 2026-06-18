@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { clearAuthCookies } from "@/lib/auth-cookies";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST() {
-  const response = NextResponse.json({ ok: true });
-  clearAuthCookies(response);
-  return response;
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  return NextResponse.json({ ok: true });
 }

@@ -93,7 +93,7 @@ export default async function OwnerScreensPage() {
                     <item.icon
                       className={cn(
                         "h-5 w-5",
-                        item.highlight ? "text-amber-600 dark:text-amber-400" : "text-primary"
+                        item.highlight ? "text-amber-600" : "text-primary"
                       )}
                     />
                   </div>

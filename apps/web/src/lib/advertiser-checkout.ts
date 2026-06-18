@@ -1,6 +1,5 @@
-import { cookies } from "next/headers";
 import { advertiserApi } from "./advertiser-api";
-import { ADVERTISER_COOKIE, verifyAdvertiserToken } from "./session";
+import { getRoleFromUser, getSupabaseAuthUser } from "./supabase/server";
 
 export type AdvertiserCheckoutProfile = {
   id: string;
@@ -10,10 +9,8 @@ export type AdvertiserCheckoutProfile = {
 };
 
 export async function getAdvertiserCheckoutProfile(): Promise<AdvertiserCheckoutProfile | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(ADVERTISER_COOKIE)?.value;
-  const session = await verifyAdvertiserToken(token);
-  if (!session) return null;
+  const user = await getSupabaseAuthUser();
+  if (!user?.email || getRoleFromUser(user) !== "ADVERTISER") return null;
 
   try {
     return await advertiserApi<AdvertiserCheckoutProfile>("/advertiser/me");

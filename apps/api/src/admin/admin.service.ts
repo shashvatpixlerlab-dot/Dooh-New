@@ -2,9 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import {
   BookingStatus,
@@ -19,7 +17,6 @@ import { PrismaService } from "../prisma/prisma.service";
 import { BookingService } from "../booking/booking.service";
 import { DeviceService } from "../device/device.service";
 import { BunnyService } from "../creatives/bunny.service";
-import { AuthService } from "../auth/auth.service";
 import { DEVICE_LIVENESS_MINUTES } from "@dooh/shared";
 import { parseDateOnly, todayInTz } from "../common/dates";
 
@@ -27,24 +24,11 @@ import { parseDateOnly, todayInTz } from "../common/dates";
 export class AdminService {
   constructor(
     private prisma: PrismaService,
-    private jwt: JwtService,
     private config: ConfigService,
     private bookingService: BookingService,
     private deviceService: DeviceService,
-    private bunny: BunnyService,
-    private authService: AuthService
+    private bunny: BunnyService
   ) {}
-
-  async login(email: string, password: string) {
-    const result = await this.authService.login(email, password);
-    if (result.user.role !== "ADMIN") {
-      throw new UnauthorizedException("Invalid credentials");
-    }
-    return {
-      token: result.token,
-      admin: { id: result.user.id, email: result.user.email, name: result.user.name },
-    };
-  }
 
   async listVenues() {
     return this.prisma.venue.findMany({

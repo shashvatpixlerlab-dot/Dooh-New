@@ -1,13 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalPassThroughEnv": [
-    "NODE_ENV",
-    "API_URL",
-    "NEXT_PUBLIC_API_URL",
     "DATABASE_URL",
-    "JWT_ADMIN_SECRET",
-    "JWT_OWNER_SECRET",
-    "JWT_ADVERTISER_SECRET",
+    "SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_JWT_SECRET",
     "JWT_DEVICE_SECRET",
     "CORS_ORIGIN",
     "CRON_SECRET",
@@ -27,7 +26,7 @@
       "persistent": true
     },
     "lint": {
-      "dependsOn": []
+      "dependsOn": ["^build"]
     },
     "test": {
       "dependsOn": ["^build"]

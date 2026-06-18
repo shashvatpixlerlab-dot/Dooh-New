@@ -1,7 +1,6 @@
-import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
 import { DashboardLogout } from "@/components/dashboard/DashboardLogout";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import type { DashboardRole } from "@/lib/dashboard-nav";
 import { DASHBOARD_BRAND } from "@/lib/dashboard-nav";
 
@@ -24,19 +23,17 @@ export function DashboardShell({
 
   return (
     <div className={`${shellClass} flex min-h-screen bg-background`}>
-      <aside className="flex w-64 shrink-0 flex-col border-r border-input bg-card">
+      <aside className="flex w-[var(--admin-sidebar-w)] shrink-0 flex-col border-r border-input bg-card/50 backdrop-blur-sm">
         <div className="border-b border-input px-5 py-5">
-          <Link href={brand.homeHref} className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-lg text-primary ring-1 ring-primary/20">
-              ◉
-            </span>
+          <div className="space-y-3">
+            <BrandLogo href={brand.homeHref} showWordmark={false} />
             <div>
-              <p className="font-semibold leading-tight text-foreground">
+              <p className="font-semibold leading-tight tracking-tight text-foreground">
                 {brand.title}
               </p>
               <p className="text-xs text-muted-foreground">{brand.subtitle}</p>
             </div>
-          </Link>
+          </div>
         </div>
 
         <div className="flex-1 px-3 py-4">
@@ -44,9 +41,8 @@ export function DashboardShell({
         </div>
 
         <div className="space-y-3 border-t border-input p-4">
-          <ThemeToggle className="theme-toggle-sidebar" />
-          <div className="flex items-center gap-3 rounded-lg bg-secondary/60 px-3 py-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-semibold text-primary">
+          <div className="flex items-center gap-3 rounded-lg border border-input/60 bg-secondary/40 px-3 py-2.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-input bg-card text-xs font-semibold text-foreground">
               {initials(email)}
             </span>
             <p className="min-w-0 flex-1 truncate text-xs text-muted-foreground">

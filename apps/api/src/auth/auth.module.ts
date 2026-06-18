@@ -8,6 +8,8 @@ import { AdvertiserAuthGuard } from "./advertiser-auth.guard";
 import { OptionalAdvertiserAuthGuard } from "./optional-advertiser-auth.guard";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
+import { SupabaseService } from "./supabase.service";
+import { SupabaseUserLoader } from "./supabase-user.loader";
 import { PrismaModule } from "../prisma/prisma.module";
 
 @Module({
@@ -22,6 +24,8 @@ import { PrismaModule } from "../prisma/prisma.module";
   ],
   controllers: [AuthController],
   providers: [
+    SupabaseService,
+    SupabaseUserLoader,
     DeviceAuthGuard,
     AdminAuthGuard,
     OwnerAuthGuard,
@@ -31,6 +35,8 @@ import { PrismaModule } from "../prisma/prisma.module";
   ],
   exports: [
     JwtModule,
+    SupabaseService,
+    SupabaseUserLoader,
     DeviceAuthGuard,
     AdminAuthGuard,
     OwnerAuthGuard,

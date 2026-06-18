@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const inter = Inter({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-jakarta",
 });
 
 export const metadata: Metadata = {
@@ -21,15 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${inter.className}`}
-        suppressHydrationWarning
-      >
-        <ThemeProvider>
-          {children}
-          <Toaster />
-        </ThemeProvider>
+    <html lang="en">
+      <body className={`${jakarta.variable} ${jakarta.className} antialiased`}>
+        {children}
+        <Toaster />
       </body>
     </html>
   );

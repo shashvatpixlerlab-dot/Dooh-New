@@ -52,6 +52,6 @@ export const DASHBOARD_NAV: Record<DashboardRole, NavLinkConfig[]> = {
   ],
   advertiser: [
     { href: "/advertiser", label: "Dashboard", icon: "layout-dashboard", exact: true },
-    { href: "/#screens", label: "Browse screens", icon: "store" },
+    { href: "/?section=screens", label: "Browse screens", icon: "store" },
   ],
 };

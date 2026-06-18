@@ -1,14 +1,10 @@
-import { cookies } from "next/headers";
 import {
-  ADMIN_COOKIE,
-  ADVERTISER_COOKIE,
-  OWNER_COOKIE,
-  verifyAdminToken,
-  verifyAdvertiserToken,
-  verifyOwnerToken,
-} from "./session";
+  getRoleFromUser,
+  getSupabaseAuthUser,
+  type SupabaseAppRole,
+} from "./supabase/server";
 
-export type AuthRole = "ADMIN" | "SCREEN_OWNER" | "ADVERTISER";
+export type AuthRole = SupabaseAppRole;
 
 export type AuthSession =
   | { role: "ADMIN"; email: string; dashboardPath: "/admin" }
@@ -63,46 +59,22 @@ export function getRoleNav(role: AuthRole): RoleNav {
         dashboardPath: "/advertiser",
         links: [
           { href: "/advertiser", label: "My bookings" },
-          { href: "/#screens", label: "Browse screens" },
+          { href: "/?section=screens", label: "Browse screens" },
         ],
       };
   }
 }
 
 export async function getAuthSession(): Promise<AuthSession | null> {
-  const cookieStore = await cookies();
-  const adminSession = await verifyAdminToken(
-    cookieStore.get(ADMIN_COOKIE)?.value
-  );
-  if (adminSession) {
-    return {
-      role: "ADMIN",
-      email: adminSession.email,
-      dashboardPath: "/admin",
-    };
-  }
+  const user = await getSupabaseAuthUser();
+  const role = getRoleFromUser(user);
+  if (!user?.email || !role) return null;
 
-  const ownerSession = await verifyOwnerToken(
-    cookieStore.get(OWNER_COOKIE)?.value
-  );
-  if (ownerSession) {
-    return {
-      role: "SCREEN_OWNER",
-      email: ownerSession.email,
-      dashboardPath: "/owner",
-    };
+  if (role === "ADMIN") {
+    return { role: "ADMIN", email: user.email, dashboardPath: "/admin" };
   }
-
-  const advertiserSession = await verifyAdvertiserToken(
-    cookieStore.get(ADVERTISER_COOKIE)?.value
-  );
-  if (advertiserSession) {
-    return {
-      role: "ADVERTISER",
-      email: advertiserSession.email,
-      dashboardPath: "/advertiser",
-    };
+  if (role === "SCREEN_OWNER") {
+    return { role: "SCREEN_OWNER", email: user.email, dashboardPath: "/owner" };
   }
-
-  return null;
+  return { role: "ADVERTISER", email: user.email, dashboardPath: "/advertiser" };
 }

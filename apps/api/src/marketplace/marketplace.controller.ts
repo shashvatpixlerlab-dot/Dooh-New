@@ -10,6 +10,11 @@ export class MarketplaceController {
     return this.marketplace.listDevices();
   }
 
+  @Get("stats")
+  getStats() {
+    return this.marketplace.getStats();
+  }
+
   @Get("devices/:id")
   getDevice(@Param("id") id: string) {
     return this.marketplace.getDevice(id);

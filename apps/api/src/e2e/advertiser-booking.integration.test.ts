@@ -1,7 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { ConfigService } from "@nestjs/config";
-import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "../prisma/prisma.service";
 import { BookingService } from "../booking/booking.service";
 import { AdvertiserService } from "../advertiser/advertiser.service";
@@ -11,7 +10,6 @@ import {
   UserRole,
 } from "@dooh/db";
 import { parseDateOnly } from "../common/dates";
-import * as bcrypt from "bcryptjs";
 
 function randSuffix() {
   return Math.random().toString(16).slice(2);
@@ -26,24 +24,20 @@ describe("Advertiser booking identity (integration-style)", () => {
     const prisma = new PrismaService();
     const config = new ConfigService({
       ...process.env,
-      JWT_ADVERTISER_SECRET:
-        process.env.JWT_ADVERTISER_SECRET ?? "test-advertiser-secret",
     });
     const bookingService = new BookingService(prisma, config);
     const advertiserService = new AdvertiserService(prisma);
-    const jwt = new JwtService();
 
     await prisma.$connect();
 
     const suffix = randSuffix();
-    const passwordHash = await bcrypt.hash("test-password", 12);
     const user = await prisma.user.create({
       data: {
         email: `adv-user-${suffix}@test.local`,
         name: "Auth Advertiser",
         phone: "+911111111199",
         role: UserRole.ADVERTISER,
-        passwordHash,
+        supabaseUserId: `00000000-0000-4000-8000-${suffix.padEnd(12, "0").slice(0, 12)}`,
       },
     });
     const advertiser = await prisma.advertiser.create({
@@ -86,17 +80,7 @@ describe("Advertiser booking identity (integration-style)", () => {
       dateEnd: parseDateOnly("2026-07-02"),
     });
 
-    const token = jwt.sign(
-      {
-        sub: user.id,
-        email: user.email,
-        type: "advertiser",
-        role: "ADVERTISER",
-        advertiserId: advertiser.id,
-      },
-      { secret: config.get("JWT_ADVERTISER_SECRET"), expiresIn: "1h" }
-    );
-    assert.ok(token);
+    assert.ok(user.supabaseUserId);
 
     const listed = await advertiserService.listBookings(advertiser.id);
     assert.ok(listed.some((b) => b.id === booking.id));
@@ -127,14 +111,13 @@ describe("Advertiser booking identity (integration-style)", () => {
       },
     });
 
-    const passwordHash = await bcrypt.hash("test-password", 12);
     const user = await prisma.user.create({
       data: {
         email,
         name: "Guest Buyer",
         phone: "+911111111188",
         role: UserRole.ADVERTISER,
-        passwordHash,
+        supabaseUserId: `00000000-0000-4000-8001-${suffix.padEnd(12, "0").slice(0, 12)}`,
       },
     });
     const linked = await prisma.advertiser.update({

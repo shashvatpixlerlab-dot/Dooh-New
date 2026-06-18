@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
-export function MarketplaceLogout() {
+export function MarketplaceLogout({ className }: { className?: string }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +16,7 @@ export function MarketplaceLogout() {
   }
 
   return (
-    <Button variant="outline" size="sm" onClick={logout} disabled={loading}>
+    <Button variant="outline" size="sm" onClick={logout} disabled={loading} className={className}>
       {loading ? "Logging out…" : "Log out"}
     </Button>
   );

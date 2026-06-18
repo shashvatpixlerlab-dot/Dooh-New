@@ -5,9 +5,11 @@ export type MarketplaceDevice = {
   venueName: string;
   slotDayPrice: number;
   isOnline: boolean;
+  isLive: boolean;
   resolution: string;
   orientation: string;
   defaultImageUrl: string;
+  currentlyShowingSlot?: number | null;
   lastSeenAt?: string | null;
 };
 

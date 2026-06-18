@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import {
   AdminBookingsTabs,
   ApprovedBookingsTable,
@@ -8,7 +7,7 @@ import {
 } from "@/components/admin/AdminBookingsTable";
 import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader";
 import { adminApi } from "@/lib/admin-api";
-import { ADMIN_COOKIE, verifyAdminToken } from "@/lib/admin-auth";
+import { verifyAdminToken } from "@/lib/admin-auth";
 
 async function loadBookings(status: string): Promise<AdminBookingRow[]> {
   try {
@@ -27,8 +26,7 @@ export default async function AdminBookingsPage({
   const activeTab =
     tab === "refunds" ? "refunds" : tab === "approved" ? "approved" : "pending";
 
-  const cookieStore = await cookies();
-  const session = await verifyAdminToken(cookieStore.get(ADMIN_COOKIE)?.value);
+  const session = await verifyAdminToken();
   const adminEmail = session?.email ?? "";
 
   const [pendingBookings, approvedBookings, rejectedBookings, cancelledBookings] =

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { getApiUrl, OWNER_COOKIE } from "@/lib/session";
+import { getApiUrl } from "@/lib/session";
+import { getAccessToken } from "@/lib/supabase/server";
 
 async function ownerFetch(path: string, init?: RequestInit) {
-  const token = (await cookies()).get(OWNER_COOKIE)?.value;
+  const token = await getAccessToken();
   if (!token) {
     return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
   }

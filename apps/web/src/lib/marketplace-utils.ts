@@ -30,9 +30,32 @@ export function formatDateOnly(value: string | Date): string {
   return value.toISOString().slice(0, 10);
 }
 
+function formatBookingDateOnly(value: string | Date): string {
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return value;
+  }
+  const d = typeof value === "string" ? new Date(value) : value;
+  return new Intl.DateTimeFormat("en-CA", { timeZone: TIMEZONE }).format(d);
+}
+
 /** Today as yyyy-MM-dd in the app timezone (matches API booking dates). */
 export function todayInAppTz(date = new Date()): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: TIMEZONE }).format(date);
+}
+
+export type BookingScheduleStatus = "live" | "scheduled" | "ended";
+
+export function getBookingScheduleStatus(
+  dateStart: string | undefined,
+  dateEnd: string | undefined,
+  today = todayInAppTz()
+): BookingScheduleStatus | null {
+  if (!dateStart || !dateEnd) return null;
+  const start = formatBookingDateOnly(dateStart);
+  const end = formatBookingDateOnly(dateEnd);
+  if (start <= today && today <= end) return "live";
+  if (today < start) return "scheduled";
+  return "ended";
 }
 
 /** Approved booking is live when today falls within [dateStart, dateEnd] inclusive. */
@@ -41,10 +64,7 @@ export function isBookingLiveToday(
   dateEnd: string | undefined,
   today = todayInAppTz()
 ): boolean {
-  if (!dateStart || !dateEnd) return false;
-  const start = formatDateOnly(dateStart);
-  const end = formatDateOnly(dateEnd);
-  return start <= today && today <= end;
+  return getBookingScheduleStatus(dateStart, dateEnd, today) === "live";
 }
 
 /** Latest allowed end date (inclusive) for a booking starting on `start`. */

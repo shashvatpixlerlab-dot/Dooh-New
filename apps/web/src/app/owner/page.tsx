@@ -39,9 +39,9 @@ export default async function OwnerDashboardPage() {
   const avgPrice =
     screens.length > 0
       ? Math.round(
-        screens.reduce((sum, s) => sum + Number(s.slotDayPrice), 0) /
-        screens.length
-      )
+          screens.reduce((sum, s) => sum + Number(s.slotDayPrice), 0) /
+            screens.length
+        )
       : 0;
   const recentScreens = screens.slice(0, 5);
 

@@ -4,37 +4,20 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { ConfigService } from "@nestjs/config";
+import { SupabaseUserLoader } from "./supabase-user.loader";
 
 @Injectable()
 export class AdminAuthGuard implements CanActivate {
-  constructor(
-    private jwt: JwtService,
-    private config: ConfigService
-  ) { }
+  constructor(private users: SupabaseUserLoader) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
-    const auth = req.headers.authorization as string | undefined;
-    const token = req.headers.cookie
-      ?.split(';')
-      .find((cookie: string) => cookie.trim().startsWith('admin_token='))
-      ?.split('=')[1];
-
-    if (!auth?.startsWith("Bearer ") && !token) {
-      throw new UnauthorizedException("Missing admin token");
-    }
     try {
-      const payload = this.jwt.verify(token || auth?.slice(7), {
-        secret: this.config.get<string>("JWT_ADMIN_SECRET"),
-      });
-      if (payload.type !== "admin") {
-        throw new UnauthorizedException();
-      }
-      req.admin = payload;
+      const user = await this.users.loadUserFromRequest(req);
+      req.admin = await this.users.toAdminContext(user);
       return true;
-    } catch {
+    } catch (e) {
+      if (e instanceof UnauthorizedException) throw e;
       throw new UnauthorizedException("Invalid admin token");
     }
   }

@@ -1,74 +1,71 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Monitor } from "lucide-react";
+import { DeviceStatusBadge } from "@/components/marketplace/DeviceStatusBadge";
+import shared from "@/components/landing/styles/shared.module.css";
+import marketplace from "@/components/landing/styles/marketplace.module.css";
 import { resolveImageUrl } from "@/lib/image-url";
 import type { MarketplaceDevice } from "@/lib/types";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export function DeviceCard({ device }: { device: MarketplaceDevice }) {
   return (
-    <Card className="group overflow-hidden border-input bg-card shadow-lg transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
-      <div className="device-card-image relative aspect-[16/10] overflow-hidden">
+    <article className={cn(marketplace.deviceCard, "group")}>
+      <div className={marketplace.deviceCardShine} aria-hidden />
+
+      <div className={marketplace.media}>
         <Image
           src={resolveImageUrl(device.defaultImageUrl)}
           alt={device.name}
           fill
-          className="object-cover transition duration-500 group-hover:scale-105"
+          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+          className={marketplace.image}
           unoptimized
         />
-        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
-        <div className="absolute left-3 top-3">
-          <Badge
-            variant={device.isOnline ? "success" : "secondary"}
-            className="backdrop-blur-sm"
-          >
-            {device.isOnline ? "Live" : "Offline"}
-          </Badge>
+        <div className={marketplace.overlay} aria-hidden />
+        <div className={marketplace.status}>
+          <DeviceStatusBadge
+            isOnline={device.isOnline}
+            isLive={device.isLive}
+            className="backdrop-blur-md px-2 py-0.5 text-[0.6875rem] shadow-sm sm:px-2.5 sm:py-1 sm:text-xs"
+          />
         </div>
-        <div className="absolute bottom-3 left-3 right-3">
-          <p className="text-xs font-medium uppercase tracking-wider text-white/70">
-            {device.venueName}
-          </p>
-          <h3 className="text-lg font-semibold text-white">{device.name}</h3>
+        <div className={marketplace.caption}>
+          <p className={marketplace.venue}>{device.venueName}</p>
+          <h3 className={marketplace.title}>{device.name}</h3>
         </div>
       </div>
 
-      <CardContent className="space-y-4 p-5">
-        <div className="flex items-start gap-2 text-sm text-muted-foreground">
-          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+      <div className={marketplace.body}>
+        <div className={marketplace.location}>
+          <MapPin
+            className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+            aria-hidden
+          />
           <span>{device.locationLabel}</span>
         </div>
 
-        <div className="flex items-center justify-between gap-3">
+        <div className={marketplace.meta}>
           <div>
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">
-              From
-            </p>
-            <p className="text-xl font-bold text-foreground">
+            <p className={marketplace.priceLabel}>From</p>
+            <p className={marketplace.price}>
               ₹{device.slotDayPrice}
-              <span className="text-sm font-normal text-muted-foreground">
-                /day
-              </span>
+              <span> /day</span>
             </p>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Monitor className="h-3.5 w-3.5" />
+          <div className={marketplace.spec}>
+            <Monitor className="h-3.5 w-3.5 text-primary" aria-hidden />
             {device.resolution}
           </div>
         </div>
 
-        {device.isOnline ? (
-          <Button asChild className="w-full">
+        <div className={marketplace.action}>
+          <Button asChild className={cn(shared.btnTraclePrimary, "w-full")}>
             <Link href={`/devices/${device.id}`}>View & Book</Link>
           </Button>
-        ) : (
-          <Button className="w-full" variant="secondary" disabled>
-            Currently offline
-          </Button>
-        )}
-      </CardContent>
-    </Card>
+        </div>
+      </div>
+    </article>
   );
 }

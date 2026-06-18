@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { redirectAfterAuth } from "@/lib/auth-redirect";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import auth from "@/components/auth/styles/auth.module.css";
+import { cn } from "@/lib/utils";
 
 export function SignupForm({
   defaultEmail,
@@ -65,7 +66,7 @@ export function SignupForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="name"
@@ -144,15 +145,13 @@ export function SignupForm({
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+        <Button
+          type="submit"
+          className={cn(auth.submitButton, "w-full")}
+          disabled={form.formState.isSubmitting}
+        >
           {form.formState.isSubmitting ? "Creating account…" : "Sign up"}
         </Button>
-        <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <Link href="/login" className="text-primary hover:underline">
-            Sign in
-          </Link>
-        </p>
       </form>
     </Form>
   );

@@ -15,7 +15,10 @@ import {
 } from "@/components/ui/table";
 import { CancelBookingButton } from "@/components/admin/CancelBookingButton";
 import { resolveImageUrl } from "@/lib/image-url";
-import { formatDateOnly, isBookingLiveToday } from "@/lib/marketplace-utils";
+import {
+  formatDateOnly,
+  getBookingScheduleStatus,
+} from "@/lib/marketplace-utils";
 import { cn } from "@/lib/utils";
 
 export type AdminBookingRow = {
@@ -46,9 +49,10 @@ function AdvertiserCell({
   booking: AdminBookingRow;
   showLiveIndicator?: boolean;
 }) {
-  const isLive =
-    showLiveIndicator &&
-    isBookingLiveToday(booking.dateStart, booking.dateEnd);
+  const scheduleStatus = showLiveIndicator
+    ? getBookingScheduleStatus(booking.dateStart, booking.dateEnd)
+    : null;
+  const isLive = scheduleStatus === "live";
 
   return (
     <TableCell>
@@ -68,13 +72,19 @@ function AdvertiserCell({
         <div>
           <div className="flex items-center gap-2">
             <p className="font-medium">{booking.advertiser.name}</p>
-            {isLive ? (
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-emerald-600 ">
+            {scheduleStatus === "live" ? (
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-emerald-600">
                 Live
               </span>
-            ) : <span className="text-[10px] font-semibold uppercase tracking-wide text-red-600">
-                offline
-              </span>}
+            ) : scheduleStatus === "scheduled" ? (
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Scheduled
+              </span>
+            ) : scheduleStatus === "ended" ? (
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Ended
+              </span>
+            ) : null}
           </div>
           <p className="text-xs text-muted-foreground">{booking.advertiser.email}</p>
         </div>

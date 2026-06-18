@@ -34,16 +34,16 @@ for (const [key, value] of Object.entries(mergedEnv)) {
   if (!(key in process.env)) process.env[key] = value;
 }
 
-const jwtAdminSecret =
-  mergedEnv.JWT_ADMIN_SECRET ?? process.env.JWT_ADMIN_SECRET ?? "";
-const jwtOwnerSecret =
-  mergedEnv.JWT_OWNER_SECRET ?? process.env.JWT_OWNER_SECRET ?? "";
-const jwtAdvertiserSecret =
-  mergedEnv.JWT_ADVERTISER_SECRET ?? process.env.JWT_ADVERTISER_SECRET ?? "";
 const bunnyCdnHostname =
   mergedEnv.BUNNY_CDN_HOSTNAME ?? process.env.BUNNY_CDN_HOSTNAME ?? "";
 const publicApiUrl =
   mergedEnv.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "";
+const publicSupabaseUrl =
+  mergedEnv.NEXT_PUBLIC_SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const publicSupabaseAnonKey =
+  mergedEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+  "";
 const publicBunnyCdn =
   mergedEnv.NEXT_PUBLIC_BUNNY_CDN_HOSTNAME ??
   mergedEnv.BUNNY_CDN_HOSTNAME ??
@@ -58,10 +58,9 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@dooh/shared"],
   outputFileTracingRoot: path.join(__dirname, "../../"),
   env: {
-    JWT_ADMIN_SECRET: jwtAdminSecret,
-    JWT_OWNER_SECRET: jwtOwnerSecret,
-    JWT_ADVERTISER_SECRET: jwtAdvertiserSecret,
     NEXT_PUBLIC_API_URL: publicApiUrl,
+    NEXT_PUBLIC_SUPABASE_URL: publicSupabaseUrl,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: publicSupabaseAnonKey,
     NEXT_PUBLIC_BUNNY_CDN_HOSTNAME: publicBunnyCdn,
   },
   images: {

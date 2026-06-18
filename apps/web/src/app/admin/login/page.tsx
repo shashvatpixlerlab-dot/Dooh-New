@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ThemeToggle } from "@/components/ThemeToggle";
-
 export default function AdminLoginPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -46,9 +44,6 @@ export default function AdminLoginPage() {
 
   return (
     <div className="admin-login-page">
-      <div className="admin-login-top">
-        <ThemeToggle />
-      </div>
       <div className="card login-card">
         <h1>Admin Login</h1>
         <p className="muted small">

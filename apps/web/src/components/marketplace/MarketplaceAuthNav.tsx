@@ -4,7 +4,6 @@ import { MarketplaceLogout } from "@/components/marketplace/MarketplaceLogout";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-/** Landing navbar only: Log in, or dashboard + log out when signed in. */
 export async function MarketplaceAuthNav({ className }: { className?: string }) {
   const auth = await getAuthSession();
 

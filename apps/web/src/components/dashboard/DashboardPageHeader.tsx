@@ -14,12 +14,12 @@ export function DashboardPageHeader({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 border-b border-input pb-6 sm:flex-row sm:items-end sm:justify-between",
+        "flex flex-col gap-4 border-b border-input/80 pb-6 sm:flex-row sm:items-end sm:justify-between",
         className
       )}
     >
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
           {title}
         </h1>
         {description && (

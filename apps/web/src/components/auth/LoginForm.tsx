@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { redirectAfterAuth } from "@/lib/auth-redirect";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,6 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import auth from "@/components/auth/styles/auth.module.css";
+import { cn } from "@/lib/utils";
 
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +47,7 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="email"
@@ -78,15 +79,13 @@ export function LoginForm() {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+        <Button
+          type="submit"
+          className={cn(auth.submitButton, "w-full")}
+          disabled={form.formState.isSubmitting}
+        >
           {form.formState.isSubmitting ? "Signing in…" : "Sign in"}
         </Button>
-        <p className="text-center text-sm text-muted-foreground">
-          No account?{" "}
-          <Link href="/signup" className="text-primary hover:underline">
-            Sign up
-          </Link>
-        </p>
       </form>
     </Form>
   );

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { dashboardPathForRole } from "@/lib/auth-session";
-import { setAuthCookie } from "@/lib/auth-cookies";
-import { getApiUrl } from "@/lib/session";
+import { createClient } from "@/lib/supabase/server";
+import { syncSessionWithApi } from "@/lib/supabase/sync-session";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -13,29 +13,34 @@ export async function POST(request: Request) {
   }
 
   try {
-    const res = await fetch(`${getApiUrl()}/api/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
 
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      const msg = data.message;
-      const message = Array.isArray(msg) ? msg.join(", ") : (msg ?? "Invalid credentials");
-      return NextResponse.json({ message }, { status: res.status });
+    if (error || !data.session) {
+      return NextResponse.json(
+        { message: error?.message ?? "Invalid credentials" },
+        { status: 401 }
+      );
     }
 
-    const response = NextResponse.json({
+    const profile = await syncSessionWithApi(data.session.access_token);
+
+    return NextResponse.json({
       ok: true,
-      redirectTo: dashboardPathForRole(data.user.role),
+      redirectTo: dashboardPathForRole(profile.role),
     });
-    setAuthCookie(response, data.user.role, data.token);
-    return response;
-  } catch {
-    return NextResponse.json(
-      { message: "Unable to reach API. Is the backend running?" },
-      { status: 503 }
-    );
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Unable to sign in";
+    if (message.includes("fetch") || message.includes("reach API")) {
+      return NextResponse.json(
+        { message: "Unable to reach API. Is the backend running?" },
+        { status: 503 }
+      );
+    }
+    return NextResponse.json({ message }, { status: 401 });
   }
 }
