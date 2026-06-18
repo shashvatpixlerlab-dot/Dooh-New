@@ -71,7 +71,7 @@ Then under **Build & Development Settings**, turn **off** any overrides that con
 | Root Directory | `apps/web` |
 | Build Command | *(override off — use `apps/web/vercel.json`)* or `cd ../.. && pnpm turbo build --filter=@dooh/web` |
 | Output Directory | *(override off — leave empty; do not use `public`)* |
-| Install Command | *(override off — use `apps/web/vercel.json`)* or `cd ../.. && pnpm install` |
+| Install Command | *(override off — use `apps/web/vercel.json`)* — filtered install, not full monorepo |
 
 If the build succeeds but deploy fails with `No Output Directory named "public"`:
 

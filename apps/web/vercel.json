@@ -1,5 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "cd ../.. && pnpm install",
-  "buildCommand": "cd ../.. && pnpm turbo build --filter=@dooh/web"
+  "installCommand": "cd ../.. && pnpm run vercel:install:web",
+  "buildCommand": "cd ../.. && pnpm run vercel:build:web"
 }

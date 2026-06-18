@@ -13,6 +13,7 @@
     "setup": "docker compose -f infra/docker-compose.yml up -d && pnpm db:generate && pnpm --filter @dooh/db migrate:deploy && pnpm db:seed",
     "db:studio": "pnpm --filter @dooh/db studio",
     "vercel:build:web": "node node_modules/typescript/bin/tsc -p packages/shared/tsconfig.json && pnpm --dir apps/web run build",
+    "vercel:install:web": "pnpm install --prod=false --filter @dooh/web...",
     "vercel:install:api": "pnpm install --prod=false --filter @dooh/api...",
     "vercel:build:api": "pnpm db:generate && node node_modules/typescript/bin/tsc -p packages/shared/tsconfig.json && pnpm --dir packages/db run build && pnpm --dir apps/api run build",
     "vercel:lint:api": "node node_modules/typescript/bin/tsc -p packages/shared/tsconfig.json --noEmit && node node_modules/typescript/bin/tsc -p packages/db/tsconfig.json --noEmit && node node_modules/typescript/bin/tsc -p apps/api/tsconfig.json --noEmit"
