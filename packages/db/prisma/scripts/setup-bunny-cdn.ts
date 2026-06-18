@@ -85,7 +85,10 @@ async function createPullZone(storageZoneId: number): Promise<PullZone> {
 async function verifyCdn(hostname: string): Promise<boolean> {
   const res = await fetch(`https://${hostname}/`);
   const text = await res.text();
-  return !text.includes("Domain suspended or not configured");
+  return (
+    !text.includes("Domain suspended or not configured") &&
+    !text.includes("unconfigured.css")
+  );
 }
 
 async function main() {

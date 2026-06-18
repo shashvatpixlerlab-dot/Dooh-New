@@ -37,6 +37,8 @@ export function resolveImageUrl(url: string): string {
 
 /** Build canonical Bunny CDN URL for a storage path. */
 export function bunnyCdnUrlForPath(path: string): string {
-  const host = BUNNY_CDN_HOST || "dooh-media.b-cdn.net";
-  return `https://${host}/${path.replace(/^\//, "")}`;
+  if (!BUNNY_CDN_HOST) {
+    throw new Error("NEXT_PUBLIC_BUNNY_CDN_HOSTNAME is not configured");
+  }
+  return `https://${BUNNY_CDN_HOST}/${path.replace(/^\//, "")}`;
 }

@@ -33,6 +33,7 @@ export class BunnyService implements OnModuleInit {
   private readonly logger = new Logger(BunnyService.name);
 
   private cdnAvailable: boolean | null = null;
+  private cdnHostnameChecked: string | null = null;
 
 
 
@@ -60,7 +61,7 @@ export class BunnyService implements OnModuleInit {
 
       this.logger.warn(
 
-        "BUNNY_CDN_HOSTNAME is not set. Create a pull zone linked to your storage zone, then set the hostname (e.g. dooh-media.b-cdn.net). Run: pnpm --filter @dooh/db setup:bunny-cdn"
+        "BUNNY_CDN_HOSTNAME is not set. Create a pull zone linked to your storage zone, then set the hostname (e.g. dooh.b-cdn.net). Run: pnpm --filter @dooh/db setup:bunny-cdn"
 
       );
 
@@ -72,7 +73,7 @@ export class BunnyService implements OnModuleInit {
 
       this.logger.warn(
 
-        `Bunny CDN hostname "${hostname}" is suspended or not configured. Image URLs will use the API proxy until fixed. Run: pnpm --filter @dooh/db setup:bunny-cdn`
+        `Bunny CDN hostname "${hostname}" is suspended or not configured. Image URLs will use the API proxy until fixed. Run: pnpm --filter @dooh/db setup:bunny-cdn — use the hostname it prints (often differs from the storage zone name).`
 
       );
 
@@ -218,17 +219,21 @@ export class BunnyService implements OnModuleInit {
 
   async isCdnAvailable(): Promise<boolean> {
 
-    if (this.cdnAvailable !== null) return this.cdnAvailable;
-
-
-
     const cdn = this.getCdnHostname();
 
     if (!cdn || !this.hasBunnyStorage()) {
 
       this.cdnAvailable = false;
 
+      this.cdnHostnameChecked = cdn ?? null;
+
       return false;
+
+    }
+
+    if (this.cdnHostnameChecked === cdn && this.cdnAvailable !== null) {
+
+      return this.cdnAvailable;
 
     }
 
@@ -247,7 +252,9 @@ export class BunnyService implements OnModuleInit {
       const text = await res.text();
 
       this.cdnAvailable =
+
         !text.includes("Domain suspended or not configured") &&
+
         !text.includes("unconfigured.css");
 
     } catch {
@@ -256,7 +263,7 @@ export class BunnyService implements OnModuleInit {
 
     }
 
-
+    this.cdnHostnameChecked = cdn;
 
     return this.cdnAvailable;
 
