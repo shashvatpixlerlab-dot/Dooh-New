@@ -20,7 +20,7 @@ doohbg/
 ```
 
 ## Stack
-
+       .....
 | Package | Tech |
 |---------|------|
 | **apps/web** | Next.js 15, Tailwind, shadcn/ui |
