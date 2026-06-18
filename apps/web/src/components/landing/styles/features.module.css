@@ -1,0 +1,19 @@
+.featureCard {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.featureCard h3 {
+  flex-shrink: 0;
+}
+
+.featureCard p {
+  flex: 1;
+}
+
+@media (max-width: 639px) {
+  .featureCard h3 {
+    font-size: 0.9375rem;
+  }
+}

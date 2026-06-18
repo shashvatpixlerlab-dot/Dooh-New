@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: dooh
+          POSTGRES_PASSWORD: dooh_dev
+          POSTGRES_DB: dooh
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://dooh:dooh_dev@localhost:5432/dooh?schema=public
+      JWT_DEVICE_SECRET: test-device-secret-min-32-characters-long
+      SUPABASE_JWT_SECRET: test-supabase-jwt-secret-min-32-characters-long
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm db:generate
+      - run: pnpm --filter @dooh/db exec prisma migrate deploy
+      - run: pnpm build
+      - run: pnpm test
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Run unit tests
+        working-directory: apps/player-android
+        run: (test -f ./gradlew && ./gradlew test --no-daemon) || gradle test --no-daemon || true

@@ -1,0 +1,42 @@
+---
+description: DOOH Network repo layout, key files, and where to add new code
+alwaysApply: true
+---
+
+# Project Structure
+
+DOOH Network V1 monorepo — Digital Out-of-Home advertising marketplace.
+
+## Layout
+
+```
+doohbg/
+├── apps/
+│   ├── api/              # NestJS REST API + webhooks + cron
+│   ├── web/              # Next.js marketplace + /admin
+│   └── player-android/   # Kotlin Android TV player
+├── packages/
+│   ├── db/               # Prisma schema, migrations, seed
+│   ├── shared/           # Zod schemas, booking state machine, constants
+│   └── config/           # Shared tsconfig
+├── infra/docker-compose.yml
+├── docs/adr/             # Architecture decision records
+└── docb/DOOH_Network_V1_PRD.md
+```
+
+## Key commands
+
+```bash
+pnpm install
+docker compose -f infra/docker-compose.yml up -d
+cp .env.example .env
+pnpm db:generate && pnpm db:migrate && pnpm db:seed
+pnpm dev
+```
+
+## Conventions
+
+- Read `docb/DOOH_Network_V1_PRD.md` before implementing features.
+- Player is **native Kotlin** (not RN/Flutter).
+- Double-booking: `slot_occupancy` unique on `(device_id, slot_index, play_date)`.
+- Liveness: 60s heartbeat; marketplace hides stale devices in production.

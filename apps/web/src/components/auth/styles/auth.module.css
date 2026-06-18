@@ -1,0 +1,261 @@
+.shell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: transparent !important;
+}
+
+.brandAside {
+  position: relative;
+  z-index: 10;
+  display: none;
+  width: 45%;
+  max-width: 36rem;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid color-mix(in srgb, var(--input) 60%, transparent);
+  padding: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .brandAside {
+    display: flex;
+  }
+}
+
+@media (min-width: 1280px) {
+  .brandAside {
+    max-width: 42rem;
+    padding: 3.5rem;
+  }
+}
+
+.formPanel {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  min-width: 0;
+  min-height: 100dvh;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .formPanel {
+    min-height: auto;
+    align-items: stretch;
+    justify-content: center;
+    padding: 2.5rem;
+  }
+}
+
+.formWrap {
+  width: 100%;
+  max-width: 24rem;
+  flex-shrink: 0;
+  margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .formWrap {
+    max-width: 28rem;
+  }
+}
+
+.formCard {
+  border-color: color-mix(in srgb, var(--input) 80%, transparent);
+  background: color-mix(in srgb, var(--card) 95%, transparent);
+  box-shadow:
+    0 1px 2px rgba(9, 9, 11, 0.04),
+    0 12px 32px rgba(9, 9, 11, 0.06);
+}
+
+.formHeader {
+  gap: 0.5rem;
+  padding: 1rem 1rem 0.5rem;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .formHeader {
+    gap: 0.75rem;
+    padding: 1.5rem 1.5rem 0.5rem;
+  }
+}
+
+.formTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+  .formTitle {
+    font-size: 1.5rem;
+  }
+}
+
+.formDescription {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+@media (min-width: 640px) {
+  .formDescription {
+    font-size: 0.875rem;
+  }
+}
+
+.formContent {
+  padding: 0 1rem 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .formContent {
+    padding: 0 1.5rem 1.5rem;
+  }
+}
+
+.formRoot form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .formRoot form {
+    gap: 1rem;
+  }
+}
+
+.formRoot [class*="space-y-2"] > * + * {
+  margin-top: 0.375rem !important;
+}
+
+@media (min-width: 640px) {
+  .formRoot [class*="space-y-2"] > * + * {
+    margin-top: 0.5rem !important;
+  }
+}
+
+.formRoot label {
+  margin-bottom: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+@media (min-width: 640px) {
+  .formRoot label {
+    margin-bottom: 0.375rem;
+    font-size: 0.875rem;
+  }
+}
+
+.formRoot input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.formRoot button[role="combobox"] {
+  height: 2.25rem !important;
+  min-height: 2.25rem;
+  padding: 0.375rem 0.625rem !important;
+  font-size: 0.8125rem !important;
+}
+
+@media (min-width: 640px) {
+  .formRoot input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  .formRoot button[role="combobox"] {
+    height: 2.5rem !important;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+.formRoot input::placeholder {
+  font-size: 0.8125rem;
+}
+
+@media (min-width: 640px) {
+  .formRoot input::placeholder {
+    font-size: 0.875rem;
+  }
+}
+
+.formRoot [class*="text-destructive"],
+.formRoot [class*="text-sm"] {
+  font-size: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .formRoot [class*="text-destructive"],
+  .formRoot [class*="text-sm"] {
+    font-size: 0.875rem;
+  }
+}
+
+.formRoot [class*="space-y-2"] {
+  gap: 0.375rem;
+}
+
+.submitButton {
+  width: 100%;
+  min-height: 2.75rem;
+  height: 2.75rem;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .submitButton {
+    min-height: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.footerText {
+  margin-top: 0.875rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+@media (min-width: 640px) {
+  .footerText {
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+  }
+}
+
+.footerLink {
+  font-weight: 500;
+  color: var(--link);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.footerLink:hover {
+  color: var(--link-hover);
+}
+
+.footerLink:active {
+  opacity: 0.72;
+}
+
+.brandTitle {
+  font-size: 1.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 1280px) {
+  .brandTitle {
+    font-size: 2.25rem;
+  }
+}
