@@ -38,7 +38,7 @@ pnpm install
 
 # 2. Configure env
 cp .env.example .env
-# Edit .env — set DATABASE_URL (Docker or Supabase), JWT secrets, optional Bunny/Razorpay
+# Edit .env — set DATABASE_URL (Docker or Supabase), Supabase Auth keys, optional Bunny/Razorpay
 
 # 3. Database — option A: Docker Postgres
 docker compose -f infra/docker-compose.yml up -d
@@ -85,7 +85,8 @@ Device pairing credentials (`DOOH-XXXX`) are printed in the seed output.
 See [`.env.example`](.env.example). Key groups:
 
 - **Database** — `DATABASE_URL`
-- **Auth** — `JWT_DEVICE_SECRET`, `JWT_ADMIN_SECRET`, `JWT_OWNER_SECRET`, `JWT_ADVERTISER_SECRET` (admin/owner/advertiser must match on API + web)
+- **Auth (humans)** — `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_SECRET`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- **Auth (Android player)** — `JWT_DEVICE_SECRET`
 - **API** — `CORS_ORIGIN`, `CRON_SECRET`, `API_URL`
 - **Payments** — `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `RAZORPAY_WEBHOOK_SECRET`
 - **Creatives** — `BUNNY_STORAGE_ZONE`, `BUNNY_STORAGE_API_KEY`, `BUNNY_CDN_HOSTNAME`

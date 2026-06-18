@@ -15,7 +15,7 @@ Project name on Vercel may be `dooh-new-web` instead of `dooh-web`.
 pnpm install
 pnpm db:generate
 pnpm --filter @dooh/db migrate:deploy
-pnpm db:seed   # optional demo data
+pnpm db:seed   # optional demo data (needs SUPABASE_SERVICE_ROLE_KEY in .env)
 ```
 
 Use the Supabase **transaction pooler** URL as `DATABASE_URL` on the API project.
@@ -27,21 +27,34 @@ Root: `apps/api`. Build/install in `apps/api/vercel.json`.
 Install uses `pnpm install --filter @dooh/api...` so the API build does **not** install Next.js/sharp from `apps/web` (that was causing Vercel install failures).
 
 **Critical:** In Vercel → **dooh-api** → **Settings** → **General** → **Root Directory**, set **`apps/api`**.  
-If this is blank, the handler path breaks (`Cannot find module '../dist/serverless'`) and builds use the wrong layout.
+If this is blank, the handler path breaks and builds use the wrong layout.
 
 **Framework Preset:** **Other** (not Next.js). **Output Directory:** leave empty.
 
-The API is a serverless NestJS app (`api/index.ts` → `dist/serverless.js`), not a static site — do not set Output Directory to `public`.
+The API is a serverless NestJS app (`api/serverless.js` → `dist/serverless.js`), not a static site — do not set Output Directory to `public`.
 
-Required env vars: `DATABASE_URL`, `CORS_ORIGIN`, `JWT_*`, `CRON_SECRET`, `BUNNY_*`, `NODE_ENV=production`.
+Required env vars:
+
+| Variable | Notes |
+|----------|--------|
+| `DATABASE_URL` | Supabase pooler `:6543` |
+| `SUPABASE_URL` | Project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | API only — never on web |
+| `SUPABASE_JWT_SECRET` | From Supabase dashboard |
+| `JWT_DEVICE_SECRET` | Android TV player auth |
+| `CORS_ORIGIN` | Web URL(s), comma-separated |
+| `CRON_SECRET` | Cron route auth |
+| `BUNNY_*` | Creative storage/CDN |
+| `NODE_ENV` | `production` |
 
 After deploy:
 
 ```bash
+curl https://YOUR-API.vercel.app/api/health
 curl https://YOUR-API.vercel.app/api/marketplace/devices
 ```
 
-## 3. Web project (`dooh-web`)
+## 3. Web project (`dooh-web` / `dooh-new-web`)
 
 Root: `apps/web`. Build/install in `apps/web/vercel.json`.
 
@@ -67,25 +80,41 @@ If the build succeeds but deploy fails with `No Output Directory named "public"`
 3. Disable the **Output Directory** override (empty field).
 4. Redeploy (Deployments → … → Redeploy).
 
-Required env vars: `API_URL`, `NEXT_PUBLIC_API_URL`, `JWT_ADMIN_SECRET`, `JWT_OWNER_SECRET`, `JWT_ADVERTISER_SECRET`, `NEXT_PUBLIC_BUNNY_CDN_HOSTNAME`.
+Required env vars:
 
-JWT secrets must match the API project exactly.
+| Variable | Notes |
+|----------|--------|
+| `API_URL` | API base URL |
+| `NEXT_PUBLIC_API_URL` | Same as `API_URL` |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
+| `NEXT_PUBLIC_BUNNY_CDN_HOSTNAME` | e.g. `dooh.b-cdn.net` |
+| `NODE_ENV` | `production` |
 
-## 4. CORS
+**Do not** set `DATABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, or `JWT_DEVICE_SECRET` on the web project.
 
-Set `CORS_ORIGIN` on the API to your web URL (e.g. `https://dooh-web.vercel.app`) and redeploy the API.
+## 4. Supabase Auth (required)
 
-## 5. Razorpay (optional)
+In Supabase → **Authentication** → **URL configuration**:
+
+- **Site URL:** `https://dooh-new-web.vercel.app` (or your production web URL)
+- **Redirect URLs:** production URL, preview URLs, `http://localhost:3000`
+
+## 5. CORS
+
+Set `CORS_ORIGIN` on the API to your web URL(s) (e.g. `https://dooh-new-web.vercel.app,https://dooh-new-web-git-main-pixler-lab.vercel.app`) and redeploy the API.
+
+## 6. Razorpay (optional)
 
 Webhook URL: `https://YOUR-API.vercel.app/api/payments/webhook`  
 Event: `payment.captured`
 
-## 6. Automated deploy scripts
+## 7. Automated deploy scripts
 
 After `vercel login` (or with `VERCEL_TOKEN` set):
 
 ```bash
-# Add VERCEL_DATABASE_URL (pooler) to .env first
+# Add VERCEL_DATABASE_URL (pooler) and SUPABASE_* to .env first
 ./scripts/vercel-push-env.sh
 cd apps/api && vercel deploy --prod --yes
 cd ../web && vercel deploy --prod --yes

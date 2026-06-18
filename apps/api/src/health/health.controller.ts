@@ -21,8 +21,10 @@ function dbEnvKeyNames(): string[] {
   );
 }
 
-function jwtEnvKeyNames(): string[] {
-  return Object.keys(process.env).filter((k) => /JWT/i.test(k));
+function supabaseUrl(): string | undefined {
+  return (
+    process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL
+  )?.trim();
 }
 
 @Controller("health")
@@ -32,6 +34,13 @@ export class HealthController {
   @Get()
   async check() {
     const dbUrl = resolveDatabaseUrl() ?? "";
+    const hasSupabaseUrl = Boolean(supabaseUrl());
+    const hasSupabaseServiceRole = Boolean(
+      process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()
+    );
+    const hasSupabaseJwtSecret = Boolean(process.env.SUPABASE_JWT_SECRET?.trim());
+    const hasJwtDeviceSecret = Boolean(process.env.JWT_DEVICE_SECRET?.trim());
+
     const meta = {
       ok: true,
       vercelEnv: process.env.VERCEL_ENV ?? null,
@@ -39,15 +48,17 @@ export class HealthController {
       usesPooler: dbUrl.includes("pooler"),
       port: dbUrl.match(/:(\d+)\//)?.[1] ?? null,
       dbEnvKeysFound: dbEnvKeyNames(),
-      jwtEnvKeysFound: jwtEnvKeyNames(),
-      hasJwtOwnerSecret: Boolean(process.env.JWT_OWNER_SECRET),
-      hasJwtAdvertiserSecret: Boolean(process.env.JWT_ADVERTISER_SECRET),
-      hasJwtAdminSecret: Boolean(process.env.JWT_ADMIN_SECRET),
+      hasSupabaseUrl,
+      hasSupabaseServiceRole,
+      hasSupabaseJwtSecret,
+      hasJwtDeviceSecret,
       fix: !dbUrl
         ? "Vercel → dooh-api (not dooh-new-web) → Environment Variables → DATABASE_URL → enable Production + Preview → Redeploy"
-        : !process.env.JWT_OWNER_SECRET || !process.env.JWT_ADVERTISER_SECRET
-          ? "Add JWT_OWNER_SECRET and JWT_ADVERTISER_SECRET to dooh-api on Vercel, then redeploy"
-          : undefined,
+        : !hasSupabaseUrl || !hasSupabaseJwtSecret
+          ? "Add SUPABASE_URL and SUPABASE_JWT_SECRET to dooh-api on Vercel, then redeploy"
+          : !hasSupabaseServiceRole
+            ? "Add SUPABASE_SERVICE_ROLE_KEY to dooh-api on Vercel (never on web), then redeploy"
+            : undefined,
     };
 
     try {

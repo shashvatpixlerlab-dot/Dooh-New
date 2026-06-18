@@ -23,20 +23,19 @@ if [[ -z "$API_URL" ]]; then
 fi
 
 # shellcheck disable=SC1090
-source <(grep -E '^(JWT_ADMIN_SECRET|JWT_OWNER_SECRET|JWT_ADVERTISER_SECRET|NEXT_PUBLIC_BUNNY_CDN_HOSTNAME|BUNNY_CDN_HOSTNAME)=' "$ENV_FILE" | sed 's/^/export /')
+source <(grep -E '^(NEXT_PUBLIC_SUPABASE_URL|NEXT_PUBLIC_SUPABASE_ANON_KEY|SUPABASE_URL|NEXT_PUBLIC_BUNNY_CDN_HOSTNAME|BUNNY_CDN_HOSTNAME)=' "$ENV_FILE" | sed 's/^/export /')
 
 export NODE_ENV=production
 BUNNY_HOST="${NEXT_PUBLIC_BUNNY_CDN_HOSTNAME:-${BUNNY_CDN_HOSTNAME:-}}"
+export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-${SUPABASE_URL:-}}"
 
 echo "==> Linking dooh-new-web..."
 vercel link --yes --project dooh-new-web 2>/dev/null || vercel link --yes
 
 echo "==> Pushing env vars (production + preview)..."
-for key in NODE_ENV JWT_ADMIN_SECRET JWT_OWNER_SECRET JWT_ADVERTISER_SECRET; do
+for key in NODE_ENV API_URL NEXT_PUBLIC_API_URL NEXT_PUBLIC_SUPABASE_URL NEXT_PUBLIC_SUPABASE_ANON_KEY; do
   vercel_push_env "$key" "${!key:-}"
 done
-vercel_push_env API_URL "$API_URL"
-vercel_push_env NEXT_PUBLIC_API_URL "$API_URL"
 if [[ -n "$BUNNY_HOST" ]]; then
   vercel_push_env NEXT_PUBLIC_BUNNY_CDN_HOSTNAME "$BUNNY_HOST"
 fi

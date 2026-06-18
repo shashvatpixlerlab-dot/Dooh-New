@@ -45,5 +45,8 @@ apps/player-android/local.properties
 *.apk
 *.aab
 
+# Local API uploads (dev fallback when Bunny is not configured)
+apps/api/uploads/
+
 # Misc
 .vercel

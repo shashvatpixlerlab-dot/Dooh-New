@@ -17,11 +17,12 @@ if [[ ! -f "$ENV_FILE" ]]; then
 fi
 
 # shellcheck disable=SC1090
-source <(grep -E '^(DATABASE_URL|VERCEL_DATABASE_URL|VERCEL_WEB_URL|JWT_|CORS_ORIGIN|CRON_SECRET|BUNNY_|HOLD_|DEVICE_|RAZORPAY_|TIMEZONE|ALLOW_ADMIN_SIGNUP|NODE_ENV)=' "$ENV_FILE" | sed 's/^/export /')
+source <(grep -E '^(DATABASE_URL|VERCEL_DATABASE_URL|VERCEL_WEB_URL|SUPABASE_|JWT_DEVICE_SECRET|CORS_ORIGIN|CRON_SECRET|BUNNY_|HOLD_|DEVICE_|RAZORPAY_|TIMEZONE|ALLOW_ADMIN_SIGNUP|NODE_ENV)=' "$ENV_FILE" | sed 's/^/export /')
 
 export NODE_ENV=production
 export DATABASE_URL="${VERCEL_DATABASE_URL:-${DATABASE_URL:-}}"
 export CRON_SECRET="${CRON_SECRET:-$(openssl rand -base64 32)}"
+export SUPABASE_URL="${SUPABASE_URL:-${NEXT_PUBLIC_SUPABASE_URL:-}}"
 if [[ -n "${VERCEL_WEB_URL:-}" ]]; then
   export CORS_ORIGIN="$VERCEL_WEB_URL"
 else
@@ -35,7 +36,7 @@ vercel link --yes --project dooh-api 2>/dev/null || vercel link --yes
 echo "==> Pushing env vars to Vercel (production + preview)..."
 vercel_push_env DATABASE_URL "$DATABASE_URL"
 
-for key in NODE_ENV CORS_ORIGIN CRON_SECRET API_URL JWT_DEVICE_SECRET JWT_ADMIN_SECRET JWT_OWNER_SECRET JWT_ADVERTISER_SECRET \
+for key in NODE_ENV CORS_ORIGIN CRON_SECRET API_URL SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY SUPABASE_JWT_SECRET JWT_DEVICE_SECRET \
   BUNNY_STORAGE_ZONE BUNNY_STORAGE_API_KEY BUNNY_STORAGE_HOSTNAME BUNNY_CDN_HOSTNAME BUNNY_API_KEY \
   HOLD_TTL_MINUTES DEVICE_LIVENESS_MINUTES TIMEZONE ALLOW_ADMIN_SIGNUP \
   RAZORPAY_KEY_ID RAZORPAY_KEY_SECRET RAZORPAY_WEBHOOK_SECRET; do
@@ -47,4 +48,4 @@ vercel deploy --prod --yes
 
 echo ""
 echo "Done. Test with:"
-echo "  curl https://\$(vercel inspect --prod 2>/dev/null | head -1)/api/marketplace/devices"
+echo "  curl https://\$(vercel inspect --prod 2>/dev/null | head -1)/api/health"
